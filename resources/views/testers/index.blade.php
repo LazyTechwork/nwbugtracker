@@ -15,7 +15,7 @@
                     <tr>
                         <td style="width: 50px;"><img src="{{ $info->photo_200 }}" class="rounded-circle" alt="" width="50"></td>
                         <td>
-                            <a href="{{ route('testers.show', ['id'=>$tester->id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
+                            <a href="{{ route('testers.show', ['id'=>$tester->user_id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
                         </td>
                     </tr>
                 @endforeach

@@ -5,15 +5,19 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>Все продукты</h1>
-                @forelse($products as $prod)
-                    <div>
-                        <a href="{{ route('products.show', ['id'=>$prod->id]) }}"><h4>{{ $prod->name }}</h4></a>
-                    </div>
-                @empty
-                    <div>
-                        <h3 class="text-muted">Продуктов не обнаружено</h3>
-                    </div>
-                @endforelse
+                <table class="table">
+                    <tbody>
+                    @foreach($products as $prod)
+                        <tr>
+                            <td style="width: 100px;"><img src="{{ $prod->getImage() }}" alt=""
+                                                           width="100"></td>
+                            <td>
+                                <a href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -45,8 +45,13 @@ class HomeController extends Controller
         return view('testers.index', compact('testers'));
     }
 
-    public function showTester(Request $request)
+    public function showTester(Request $request, $id)
     {
-
+        if ($id == session()->get('id')) return redirect()->route('home');
+        $tester = User::find($id);
+        if ($tester == null) return redirect()->route('testers.index');
+        $vkinfo = $tester->getVkInfo();
+        $userdb = User::find(session()->get('id'));
+        return view('testers.show', compact('tester', 'vkinfo', 'userdb'));
     }
 }

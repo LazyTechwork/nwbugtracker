@@ -29,4 +29,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductUpdate::class, 'product');
     }
+
+    public function getImage()
+    {
+        return asset('img/products/'.$this->image);
+    }
 }

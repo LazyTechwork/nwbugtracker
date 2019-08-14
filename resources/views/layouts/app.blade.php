@@ -26,7 +26,7 @@
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('img/nwbugtracker.svg') }}" height="30" alt="">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -38,7 +38,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Профиль</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Профиль</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Отчёты</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Продукты</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('testers.index') }}">Участники</a></li>

@@ -8,7 +8,7 @@
                     <h4 class="card-header">{{ $prod->name }}</h4>
                     <div class="row no-gutters">
                         <div class="col-md-3">
-                            <img src="{{ asset('img/products/'.$prod->image) }}" class="card-img-top img-fluid" alt="">
+                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid" alt="">
                         </div>
                         <div class="col-md-9">
                             <div class="card-body">
