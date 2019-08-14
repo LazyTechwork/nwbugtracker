@@ -41,7 +41,7 @@
                     <li class="nav-item"><a class="nav-link" href="#">Профиль</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Отчёты</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Продукты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Участники</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('testers.index') }}">Участники</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->

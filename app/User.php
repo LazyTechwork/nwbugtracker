@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -17,5 +18,16 @@ class User extends Authenticatable
     public function getBugs()
     {
         return $this->hasMany(Bug::class, 'author');
+    }
+
+    public function moderatorName()
+    {
+        $req = DB::table('mods')->where('user_id', $this->user_id);
+        return $req->get('funny') ?? 'Модератор #' . $req->get('id');
+    }
+
+    public function getVkInfo()
+    {
+        return DB::table('users')->where('user_id', $this->user_id)->get()[0] ?? null;
     }
 }

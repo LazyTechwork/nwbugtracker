@@ -38,4 +38,15 @@ class HomeController extends Controller
         $updates = $prod->getProductVersions;
         return view('products.show', compact('prod', 'bugs', 'updates'));
     }
+
+    public function testers(Request $request)
+    {
+        $testers = User::paginate(10);
+        return view('testers.index', compact('testers'));
+    }
+
+    public function showTester(Request $request)
+    {
+
+    }
 }

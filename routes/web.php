@@ -25,6 +25,10 @@ Route::middleware('sessioned')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
         Route::get('show/{id}', 'HomeController@showProduct')->name('show');
     });
+    Route::prefix('tester')->name('testers.')->group(function () {
+        Route::get('list', 'HomeController@testers')->name('index');
+        Route::get('show/{id}', 'HomeController@showTester')->name('show');
+    });
 });
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('authentificate', 'Auth\LoginController@authvk')->name('authvk');
