@@ -13,4 +13,9 @@ class User extends Authenticatable
     protected $table = 'testers';
     public $timestamps = false;
     protected $primaryKey = 'user_id';
+
+    public function getBugs()
+    {
+        return $this->hasMany(Bug::class, 'author');
+    }
 }
