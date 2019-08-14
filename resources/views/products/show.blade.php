@@ -22,7 +22,10 @@
                                     Исправлено <span
                                             class="badge badge-success">{{ $bugs->where('status', '3')->count() }}</span>
                                 </h5>
-                                <p><a href="#" class="btn btn-primary">Создать отчёт</a></p>
+                                    <div class="mb-2">
+                                        <a href="#" class="btn btn-success">Создать отчёт</a>
+                                        <a href="#" class="btn btn-primary">Список отчётов</a>
+                                    </div>
                                 <h4 class="card-title">Обновления</h4>
                                 @forelse($updates as $vers)
                                     <p class="card-text">
