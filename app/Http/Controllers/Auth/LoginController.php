@@ -54,7 +54,7 @@ class LoginController extends Controller
     {
         if (Session::has('vktoken')) return redirect()->route('home');
         if (!$request->has('code')) return redirect()->route('login');
-        $auth = new Auth('7096318', 'GUvmMOIYmfXgziiWNg5m', route('authvk'), 'offline,notify');
+        $auth = new Auth('7096318', 'GUvmMOIYmfXgziiWNg5m', route('authvk'), 'offline');
         try {
             $token = $auth->getToken($request->code);
             $client = new Client('5.101');

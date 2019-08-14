@@ -8,8 +8,9 @@
             </div>
             <div class="col-md-9">
                 <h1>Личный кабинет тестировщика</h1>
-                <span>Имя: <strong>{{$user['last_name'] . ' ' . $user['first_name']}}</strong></span><br>
-                <span>Баллы: <strong>{{ $userdb['balls'] }}</strong></span><br>
+                <span>Имя: <strong>{{$user['last_name'] . ' ' . $user['first_name']}}</strong> <sup>ID{{$user['id']}}</sup></span><br>
+                <span>Баллы: <strong>{{ $userdb['points'] }}</strong></span><br>
+                <span>На должности с <strong>{{ $userdb['data'] }}</strong></span><br>
             </div>
         </div>
     </div>

@@ -20,7 +20,7 @@ class HomeController extends Controller
         $client = new Client('5.101');
         $client->setDefaultToken(session()->get('vktoken'));
         $user = $client->request('users.get', ['fields' => 'photo_max_orig'])['response'][0];
-        $userdb = User::find(session()->get('id'))->first();
+        $userdb = User::find(session()->get('id'));
         return view('home', compact('user', 'userdb'));
     }
 }
