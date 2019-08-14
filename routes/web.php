@@ -11,6 +11,16 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+
+Auth::routes(['register' => false, 'reset' => false]);
+
+Route::middleware('sessioned')->group(function () {
+    Route::get('home', 'HomeController@index')->name('home');
+});
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('authentificate', 'Auth\LoginController@authvk')->name('authvk');
