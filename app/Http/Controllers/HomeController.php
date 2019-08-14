@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use App\User;
 use ATehnix\VkClient\Client;
 use Illuminate\Http\Request;
@@ -22,5 +23,19 @@ class HomeController extends Controller
         $user = $client->request('users.get', ['fields' => 'photo_max_orig'])['response'][0];
         $userdb = User::find(session()->get('id'));
         return view('home', compact('user', 'userdb'));
+    }
+
+    public function products(Request $request)
+    {
+        $products = Product::orderBy('id', 'desc')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function showProduct(Request $request, $id)
+    {
+        $prod = Product::find($id);
+        $bugs = $prod->getBugs();
+        $updates = $prod->getProductVersions;
+        return view('products.show', compact('prod', 'bugs', 'updates'));
     }
 }

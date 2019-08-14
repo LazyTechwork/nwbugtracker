@@ -21,6 +21,10 @@ Auth::routes(['register' => false, 'reset' => false]);
 
 Route::middleware('sessioned')->group(function () {
     Route::get('home', 'HomeController@index')->name('home');
+    Route::prefix('product')->name('products.')->group(function () {
+        Route::get('list', 'HomeController@products')->name('index');
+        Route::get('show/{id}', 'HomeController@showProduct')->name('show');
+    });
 });
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('authentificate', 'Auth\LoginController@authvk')->name('authvk');
