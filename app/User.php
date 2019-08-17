@@ -20,6 +20,11 @@ class User extends Authenticatable
         return $this->hasMany(Bug::class, 'author');
     }
 
+    public function getModeratableProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_moderators', 'product', 'moderator');
+    }
+
     public function moderatorName()
     {
         $req = DB::table('mods')->where('user_id', $this->user_id);

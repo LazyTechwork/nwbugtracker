@@ -24,6 +24,9 @@ Route::middleware('sessioned')->group(function () {
     Route::prefix('product')->name('products.')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
         Route::get('show/{id}', 'HomeController@showProduct')->name('show');
+        Route::middleware('glmod')->get('modlist/{id}', 'HomeController@showModerators')->name('modlist');
+        Route::middleware('glmod')->post('addmod/{id}', 'HomeController@addModerator')->name('addmod');
+        Route::middleware('glmod')->get('delmod/{id}/{modid}', 'HomeController@delModerator')->name('delmod');
     });
     Route::prefix('tester')->name('testers.')->group(function () {
         Route::get('list', 'HomeController@testers')->name('index');

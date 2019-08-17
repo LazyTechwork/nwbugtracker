@@ -8,7 +8,10 @@
             </div>
             <div class="col-md-9">
                 <h1>Профиль тестировщика</h1>
-                <span>Имя: <strong>{{$vkinfo->last_name . ' ' . $vkinfo->first_name}}</strong> <sup>ID{{$tester->user_id}}</sup></span><br>
+                <span>Имя: <strong>{{$vkinfo->last_name . ' ' . $vkinfo->first_name}}</strong> <sup>{{$tester->user_id}}</sup></span><br>
+                @if (session()->get('isglmod'))
+                    <span>Баллы: <strong>{{ $tester->points }}</strong></span><br>
+                @endif
                 <span>На должности с <strong>{{ $userdb['data'] }}</strong></span><br>
             </div>
         </div>

@@ -8,13 +8,15 @@
                 <table class="table">
                     <tbody>
                     @foreach($products as $prod)
-                        <tr>
-                            <td style="width: 100px;"><img src="{{ $prod->getImage() }}" alt=""
-                                                           width="100"></td>
-                            <td>
-                                <a href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a>
-                            </td>
-                        </tr>
+                        @if(!$prod->locked || session()->get('isglmod'))
+                            <tr>
+                                <td style="width: 100px;"><img src="{{ $prod->getImage() }}" alt=""
+                                                               width="100"></td>
+                                <td class="align-middle">
+                                    <a href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }} @if($prod->locked)(БЛОКИРОВАН)@endif</a>
+                                    <p>{{ $prod->description }}</p>
+                                </td>
+                            </tr> @endif
                     @endforeach
                     </tbody>
                 </table>

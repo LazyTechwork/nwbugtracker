@@ -14,7 +14,7 @@
                     @endphp
                     <tr>
                         <td style="width: 50px;"><img src="{{ $info->photo_200 }}" class="rounded-circle" alt="" width="50"></td>
-                        <td>
+                        <td class="align-middle">
                             <a href="{{ route('testers.show', ['id'=>$tester->user_id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
                         </td>
                     </tr>

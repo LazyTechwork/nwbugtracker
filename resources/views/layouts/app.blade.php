@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title', 'NeoWave Bug-tracker')</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -63,7 +63,25 @@
         </div>
     </nav>
 
-    <main class="py-4">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                @if(session()->has('error'))
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">Ошибка!</h4>
+                        <p class="mb-0">{{ session()->get('error') }}</p>
+                    </div>
+                @endif
+                @if(session()->has('success'))
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Успешно!</h4>
+                        <p class="mb-0">{{ session()->get('success') }}</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+    <main class="my-4">
         @yield('content')
     </main>
 </div>

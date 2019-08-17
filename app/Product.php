@@ -12,7 +12,7 @@ class Product extends Model
 
     public function getModerators()
     {
-        return $this->belongsToMany(User::class, 'product_moderators', 'moderator', 'product', 'user_id');
+        return $this->belongsToMany(User::class, 'product_moderators', 'moderator', 'product');
     }
 
     public function getBugs()
@@ -20,9 +20,9 @@ class Product extends Model
         return $this->hasMany(Bug::class, 'product');
     }
 
-    public function isModerator(User $user)
+    public function isModerator($id)
     {
-        return $this->getModerators->contains($user);
+        return $this->getModerators->contains(User::find($id));
     }
 
     public function getProductVersions()

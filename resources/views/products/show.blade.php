@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card w-100">
-                    <h4 class="card-header">{{ $prod->name }}</h4>
+                    <h4 class="card-header">{{ $prod->name }} @if($prod->locked)(БЛОКИРОВАН)@endif</h4>
                     <div class="row no-gutters">
                         <div class="col-md-3">
                             <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid" alt="">
@@ -23,10 +23,21 @@
                                             class="badge badge-success">{{ $bugs->where('status', '3')->count() }}</span>
                                 </h5>
                                 <div class="mb-2">
-                                    <a href="#" class="btn btn-success">Создать отчёт</a>
+                                    @if(!$prod->locked)
+                                        <a href="#" class="btn btn-success">Создать отчёт</a>
+                                    @else
+                                        <button class="btn btn-success" type="button" disabled="disabled">Создать
+                                            отчёт
+                                        </button>
+                                    @endif
                                     <a href="#" class="btn btn-primary">Список отчётов</a>
-                                    @if(session()->get('id') == 538327743 || session()->get('id') == 242521347)<a
-                                            href="#" class="btn btn-danger">Модераторы</a> @endif
+                                    @if(session()->get('isglmod'))<a
+                                            href="{{ route('products.modlist', ['id'=>$prod->id]) }}"
+                                            class="btn btn-danger">Модераторы</a> @endif
+                                    @if($prod->isModerator(session()->get('user_id'))) <a href="#"
+                                                                                          class="btn btn-outline-primary">Новое
+                                        обновление</a>
+                                    @endif
                                 </div>
                                 <h4 class="card-title">Обновления</h4>
                                 @forelse($updates as $vers)
