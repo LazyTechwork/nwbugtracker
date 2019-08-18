@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\ProductUpdate;
 use App\User;
 use ATehnix\VkClient\Client;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -124,6 +126,78 @@ class HomeController extends Controller
     public function editProduct(Request $request, $id)
     {
 
+    }
+
+    public function newUpdateV($id)
+    {
+        $prod = Product::find($id);
+        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        return view('products.newupd', compact('prod'));
+    }
+
+    public function newUpdate(Request $request, $id)
+    {
+        $prod = Product::find($id);
+        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        $validator = Validator::make($request->input(), [
+            'version' => ['required', 'max:50'],
+            'changelog' => ['required'],
+            'time' => ['required', 'date_format:Y-m-d\TH:i', function ($attr, $val, $fail) {
+                $val = Carbon::createFromFormat('Y-m-d\TH:i', $val);
+                if (!($val > Carbon::now() && $val < Carbon::now()->addDay())) {
+                    $fail($attr . 'is before now or greater than one day more');
+                }
+            }]
+        ]);
+        if ($validator->fails()) {
+            Session::flash('error', 'Проверьте значения! Напоминаем, версия должна быть не больше 50 символов в длину, а время не меньше текущего и не больше одного дня позже');
+            return redirect()->back()->withInput();
+        }
+        $dataset = [
+            'product' => $id,
+            'version' => $request->version,
+            'changelog' => nl2br(e($request->changelog)),
+            'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
+        ];
+        $upd = ProductUpdate::create($dataset);
+        Session::flash('success', sprintf('Мы добавили обновление продукта с версией %s, которое будет доступно %s',
+            $upd->version, Carbon::make($upd->time)->format('d.m.Y H:i')));
+        return redirect()->route('products.show', ['id' => $id]);
+    }
+
+    public function delUpdate(Request $request, $id, $updateid)
+    {
+        $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        $upd = ProductUpdate::find($updateid);
+        if ($upd == null) {
+            Session::flash('error', 'Обновление продукта не найдено!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        if (!$upd->time->gte(\Carbon\Carbon::now()->addHour()) && !session()->get('isglmod')) {
+            Session::flash('error', sprintf('Удалить обновление продукта с версией %s невозможно, т.к. прошло более часа. Попросите об удалении у администрации баг-трекера', $upd->version));
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        if ($upd->product != $id) {
+            Session::flash('error', sprintf('Обновление продукта с версией %s не относится к продукту %s', $upd->version, $prod->name));
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        $upd->delete();
+        Session::flash('success', sprintf('Обновление продукта с версией %s удалено в продукте %s', $upd->version, $prod->name));
+        return redirect()->route('products.show', ['id' => $id]);
     }
 
 

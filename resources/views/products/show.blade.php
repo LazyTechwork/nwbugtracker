@@ -34,20 +34,25 @@
                                     @if(session()->get('isglmod'))<a
                                             href="{{ route('products.modlist', ['id'=>$prod->id]) }}"
                                             class="btn btn-danger">Модераторы</a> @endif
-                                    @if($prod->isModerator(session()->get('user_id'))) <a href="#"
-                                                                                          class="btn btn-outline-primary">Новое
+                                    @if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod')) <a
+                                            href="{{ route('products.newupdV', ['id'=>$prod->id]) }}"
+                                            class="btn btn-outline-primary">Новое
                                         обновление</a>
                                     @endif
                                 </div>
                                 <h4 class="card-title">Обновления</h4>
                                 @forelse($updates as $vers)
-                                    <p class="card-text">
-                                        {{ $vers->version }}
-                                        <small class="text-muted">{{ date('d.m.Y H:i', strtotime($vers->time)) }}</small>
-                                        <br>
-                                        Описание: <br>
-                                        {{ $vers->changelog }}
-                                    </p>
+                                    @if($vers->time->lte(\Carbon\Carbon::now()) || $prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                        <h5>{{ $vers->version }} <sup
+                                                    class="text-muted">{{ date('d.m.Y H:i', strtotime($vers->time)) }}</sup>
+                                        </h5>
+                                        <p>{!! $vers->changelog !!}</p>
+                                        @if(($vers->time->gte(\Carbon\Carbon::now()->addHour()) && $prod->isModerator(session()->get('user_id'))) || session()->get('isglmod'))
+                                            <a href="{{ route('products.delupd', ['id'=>$prod->id, 'updateid'=>$vers->id]) }}"
+                                               class="btn btn-outline-danger">Удалить</a>
+                                        @endif
+                                        <hr>
+                                    @endif
                                 @empty
                                     <div>
                                         <p class="text-muted">Обновлений этого продукта не найдено</p>

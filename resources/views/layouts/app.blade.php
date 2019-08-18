@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,9 +22,9 @@
     <meta name="theme-color" content="#4D59A0">
     <link rel="shortcut icon" href="{{asset('img/nw_icon.png')}}" type="image/png">
 </head>
-<body>
-<div id="app">
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+<body class="d-flex flex-column h-100">
+<div id="app" class="d-flex flex-column h-100">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-laravel">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('img/nwbugtracker.svg') }}" height="30" alt="">
@@ -62,28 +62,42 @@
             </div>
         </div>
     </nav>
-
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                @if(session()->has('error'))
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading">Ошибка!</h4>
-                        <p class="mb-0">{{ session()->get('error') }}</p>
-                    </div>
-                @endif
-                @if(session()->has('success'))
-                    <div class="alert alert-success" role="alert">
-                        <h4 class="alert-heading">Успешно!</h4>
-                        <p class="mb-0">{{ session()->get('success') }}</p>
-                    </div>
-                @endif
+    <main class="py-5 flex-shrink-0">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading">Ошибка!</h4>
+                            <p class="mb-0">{{ session()->get('error') }}</p>
+                        </div>
+                    @endif
+                    @if(session()->has('success'))
+                        <div class="alert alert-success" role="alert">
+                            <h4 class="alert-heading">Успешно!</h4>
+                            <p class="mb-0">{{ session()->get('success') }}</p>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
-    <main class="py-4">
         @yield('content')
     </main>
+    <footer class="footer mt-auto py-4">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-md-10">
+                    <div class="text-muted">NeoWave Bug-tracker (World Bots Edition)</div>
+                    <div class="text-muted">Copyright <a href="//vk.com/tekly">Tekly Technologies in head of Ivan Petrov</a>
+                        &copy; {{ date('Y') }}</div>
+                </div>
+                <div class="col-md-2">
+                    {{--<div class="text-muted"><a href="{{ route('legal.index') }}">{{ __('app.legal.header') }}</a></div>--}}
+                    <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
 </body>
 </html>

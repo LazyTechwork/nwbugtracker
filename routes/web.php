@@ -33,6 +33,11 @@ Route::middleware('sessioned')->group(function () {
             Route::post('new', 'HomeController@newProduct')->name('newprod');
             Route::post('edit/{id}', 'HomeController@editProduct')->name('editprod');
         });
+        Route::prefix('update')->group(function () {
+            Route::get('new/{id}', 'HomeController@newUpdateV')->name('newupdV');
+            Route::post('new/{id}', 'HomeController@newUpdate')->name('newupd');
+            Route::get('delete/{id}/{updateid}', 'HomeController@delUpdate')->name('delupd');
+        });
     });
     Route::prefix('tester')->name('testers.')->group(function () {
         Route::get('list', 'HomeController@testers')->name('index');
