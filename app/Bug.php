@@ -41,73 +41,68 @@ class Bug extends Model
     public $timestamps = true;
     protected $table = 'bugs';
 
+    public static $statuses = ['Открыт',
+        'В работе',
+        'Исправлен',
+        'Переоткрыт',
+        'Закрыт',
+        'Отложен',
+        'Заблокирован',
+        'Отклонён',
+        'Не воспроизводится',
+        'Требует корректировки',
+        'Неактуально'];
+
     public function getStatus()
     {
-        switch ($this->status) {
+        return Bug::$statuses[$this->status];
+    }
+
+    public function getStatusColor()
+    {
+        switch ($this->status + 1) {
             default:
             case 1:
-                return 'Открыт';
-            case 2:
-                return 'В работе';
-            case 3:
-                return 'Исправлен';
             case 4:
-                return 'Переоткрыт';
-            case 5:
-                return 'Закрыт';
+                return 'primary';
+            case 2:
             case 6:
-                return 'Отложен';
+                return 'warning';
+            case 3:
+            case 5:
+                return 'success';
             case 7:
-                return 'Заблокирован';
             case 8:
-                return 'Отклонён';
             case 9:
-                return 'Не воспроизводится';
             case 10:
-                return 'Требует корректировки';
             case 11:
-                return 'Неактуально';
+                return 'danger';
         }
     }
+
+    public static $types = ['Падение приложения',
+        'Зависание приложения',
+        'Неработающая функциональность',
+        'Потеря данных',
+        'Производительность',
+        'Косметическое несоответствие',
+        'Ошибка в тексте',
+        'Пожелание'];
 
     public function getType()
     {
-        switch ($this->type) {
-            default:
-            case 1:
-                return 'Падение приложения';
-            case 2:
-                return 'Зависание приложения';
-            case 3:
-                return 'Неработающая функциональность';
-            case 4:
-                return 'Потеря данных';
-            case 5:
-                return 'Производительность';
-            case 6:
-                return 'Косметическое несоответствие';
-            case 7:
-                return 'Ошибка в тексте';
-            case 8:
-                return 'Пожелание';
-        }
+        return Bug::$types[$this->type];
     }
+
+    public static $priorities = ['Низкий',
+        'Средний',
+        'Высокий',
+        'Критический',
+        'Уязвимость'];
 
     public function getPriority()
     {
-        switch ($this->priority) {
-            default:
-            case 1:
-                return 'Низкий';
-            case 2:
-                return 'Средний';
-            case 3:
-                return 'Высокий';
-            case 4:
-                return 'Критический';
-            case 5:
-                return 'Уязвимость';
-        }
+        return Bug::$priorities[$this->priority];
     }
 
     public function getAuthor()
@@ -118,11 +113,6 @@ class Bug extends Model
     public function getBugUpdates()
     {
         return $this->hasMany(BugUpdate::class, 'bug_id', 'id');
-    }
-
-    public function getTag()
-    {
-        return $this->belongsTo(Tag::class, 'tag', 'id');
     }
 
     public function getProduct()

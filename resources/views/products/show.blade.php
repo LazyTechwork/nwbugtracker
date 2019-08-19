@@ -24,13 +24,13 @@
                                 </h5>
                                 <div class="mb-2">
                                     @if(!$prod->locked)
-                                        <a href="#" class="btn btn-success">Создать отчёт</a>
+                                        <a href="{{ route('bugs.newbugV', ['productid'=>$prod->id]) }}" class="btn btn-success">Создать отчёт</a>
                                     @else
                                         <button class="btn btn-success" type="button" disabled="disabled">Создать
                                             отчёт
                                         </button>
                                     @endif
-                                    <a href="#" class="btn btn-primary">Список отчётов</a>
+                                    <a href="{{ route('products.bugs', ['id'=>$prod->id]) }}" class="btn btn-primary">Список отчётов</a>
                                     @if(session()->get('isglmod'))<a
                                             href="{{ route('products.modlist', ['id'=>$prod->id]) }}"
                                             class="btn btn-danger">Модераторы</a> @endif
@@ -44,7 +44,7 @@
                                 @forelse($updates as $vers)
                                     @if($vers->time->lte(\Carbon\Carbon::now()) || $prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
                                         <h5>{{ $vers->version }} <sup
-                                                    class="text-muted">{{ date('d.m.Y H:i', strtotime($vers->time)) }}</sup>
+                                                    class="text-muted">{{ $vers->time->format('d.m.Y H:i') }}</sup>
                                         </h5>
                                         <p>{!! $vers->changelog !!}</p>
                                         @if(($vers->time->gte(\Carbon\Carbon::now()->addHour()) && $prod->isModerator(session()->get('user_id'))) || session()->get('isglmod'))

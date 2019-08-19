@@ -24,6 +24,7 @@ Route::middleware('sessioned')->group(function () {
     Route::prefix('product')->name('products.')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
         Route::get('show/{id}', 'HomeController@showProduct')->name('show');
+        Route::get('bugs/{id}', 'HomeController@productBugs')->name('bugs');
         Route::middleware('glmod')->group(function () {
             Route::get('modlist/{id}', 'HomeController@showModerators')->name('modlist');
             Route::post('addmod/{id}', 'HomeController@addModerator')->name('addmod');
@@ -42,6 +43,13 @@ Route::middleware('sessioned')->group(function () {
     Route::prefix('tester')->name('testers.')->group(function () {
         Route::get('list', 'HomeController@testers')->name('index');
         Route::get('show/{id}', 'HomeController@showTester')->name('show');
+    });
+
+    Route::prefix('bug')->name('bugs.')->group(function () {
+        Route::get('list', 'HomeController@bugs')->name('index');
+        Route::get('show/{id}', 'HomeController@showBug')->name('show');
+        Route::get('new/{productid}', 'HomeController@newBugV')->name('newbugV');
+        Route::post('new/{productid}', 'HomeController@newBug')->name('newbug');
     });
 });
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');

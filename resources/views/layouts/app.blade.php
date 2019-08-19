@@ -39,7 +39,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Профиль</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Отчёты</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('bugs.index') }}">Отчёты</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Продукты</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('testers.index') }}">Участники</a></li>
                 </ul>

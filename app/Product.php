@@ -20,6 +20,11 @@ class Product extends Model
         return $this->hasMany(Bug::class, 'product');
     }
 
+    public function getLatestVersion()
+    {
+        return $this->getProductVersions()->orderBy('id', 'desc')->first();
+    }
+
     public function isModerator($id)
     {
         return $this->getModerators->contains(User::find($id));
@@ -32,6 +37,6 @@ class Product extends Model
 
     public function getImage()
     {
-        return asset('img/products/'.$this->image);
+        return asset('img/products/' . $this->image);
     }
 }

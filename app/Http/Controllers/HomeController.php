@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Bug;
 use App\Product;
 use App\ProductUpdate;
 use App\User;
@@ -66,7 +67,9 @@ class HomeController extends Controller
         $userinfo = $user->getVkInfo();
 //        dd($user->user_id, $userinfo);
         $prod->getModerators()->syncWithoutDetaching($user->user_id);
-        Session::flash('success', sprintf('Добавлен пользователь %s в продукт %s в качестве модератора!', $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
+        Session::flash('success',
+            sprintf('Добавлен пользователь «%s» в продукт «%s» в качестве модератора!',
+                $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
         return redirect()->back();
     }
 
@@ -77,11 +80,15 @@ class HomeController extends Controller
         $userinfo = $user->getVkInfo();
 //        dd($user->user_id, $userinfo);
         if (!$prod->isModerator($modid)) {
-            Session::flash('error', sprintf('%s не является модератором продукта %s', $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
+            Session::flash('error',
+                sprintf('«%s» не является модератором продукта «%s»',
+                    $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
             return redirect()->back();
         }
         $prod->getModerators()->detach($user->user_id);
-        Session::flash('success', sprintf('Пользователь %s потерял все права в продукте %s!', $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
+        Session::flash('success',
+            sprintf('Пользователь «%s» потерял все права в продукте «%s»!',
+                $userinfo->last_name . ' ' . $userinfo->first_name, $prod->name));
         return redirect()->back();
     }
 
@@ -156,7 +163,8 @@ class HomeController extends Controller
             }]
         ]);
         if ($validator->fails()) {
-            Session::flash('error', 'Проверьте значения! Напоминаем, версия должна быть не больше 50 символов в длину, а время не меньше текущего и не больше одного дня позже');
+            Session::flash('error',
+                'Проверьте значения! Напоминаем, версия должна быть не больше 50 символов в длину, а время не меньше текущего и не больше одного дня позже');
             return redirect()->back()->withInput();
         }
         $dataset = [
@@ -166,7 +174,8 @@ class HomeController extends Controller
             'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
         ];
         $upd = ProductUpdate::create($dataset);
-        Session::flash('success', sprintf('Мы добавили обновление продукта с версией %s, которое будет доступно %s',
+        Session::flash('success',
+            sprintf('Мы добавили обновление продукта с версией «%s», которое будет доступно «%s»',
             $upd->version, Carbon::make($upd->time)->format('d.m.Y H:i')));
         return redirect()->route('products.show', ['id' => $id]);
     }
@@ -176,7 +185,7 @@ class HomeController extends Controller
         $prod = Product::find($id);
         if ($prod == null) {
             Session::flash('error', 'Продукт не найден!');
-            return redirect()->route('products.show', ['id' => $id]);
+            return redirect()->route('home');
         }
         if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
@@ -188,15 +197,20 @@ class HomeController extends Controller
             return redirect()->route('products.show', ['id' => $id]);
         }
         if (!$upd->time->gte(\Carbon\Carbon::now()->addHour()) && !session()->get('isglmod')) {
-            Session::flash('error', sprintf('Удалить обновление продукта с версией %s невозможно, т.к. прошло более часа. Попросите об удалении у администрации баг-трекера', $upd->version));
+            Session::flash('error',
+                sprintf('Удалить обновление продукта с версией «%s» невозможно, т.к. прошло более часа. Попросите об удалении у администрации баг-трекера',
+                    $upd->version));
             return redirect()->route('products.show', ['id' => $id]);
         }
         if ($upd->product != $id) {
-            Session::flash('error', sprintf('Обновление продукта с версией %s не относится к продукту %s', $upd->version, $prod->name));
+            Session::flash('error',
+                sprintf('Обновление продукта с версией «%s» не относится к продукту «%s»',
+                    $upd->version, $prod->name));
             return redirect()->route('products.show', ['id' => $id]);
         }
         $upd->delete();
-        Session::flash('success', sprintf('Обновление продукта с версией %s удалено в продукте %s', $upd->version, $prod->name));
+        Session::flash('success',
+            sprintf('Обновление продукта с версией «%s» удалено в продукте «%s»', $upd->version, $prod->name));
         return redirect()->route('products.show', ['id' => $id]);
     }
 
@@ -217,5 +231,105 @@ class HomeController extends Controller
         $vkinfo = $tester->getVkInfo();
         $userdb = User::find(session()->get('id'));
         return view('testers.show', compact('tester', 'vkinfo', 'userdb'));
+    }
+
+//    REPORTS
+
+    public function bugs()
+    {
+        $bugs = Bug::orderBy('created_at', 'desc')->paginate(15);
+        return view('bugs.index', compact('bugs'));
+    }
+
+    public function productBugs($id)
+    {
+        $bugs = Bug::where('product', $id)->orderBy('created_at', 'desc')->paginate(15);
+        return view('bugs.index', compact('bugs'));
+    }
+
+    public function newBugV($productid)
+    {
+        $prod = Product::find($productid);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        if ($prod->locked) {
+            Session::flash('error', 'Продукт блокирован, у Вас нет доступа к созданию отчётов здесь!');
+            return redirect()->route('products.show', ['id' => $productid]);
+        }
+        if ($prod->getLatestVersion() == null) {
+            Session::flash('error',
+                'У продукта нет опубликованных версий, попросите администратора добавить хотябы одну версию продукта!');
+            return redirect()->route('products.show', ['id' => $productid]);
+        }
+
+        return view('bugs.newbug', compact('prod'));
+    }
+
+    public function newBug(Request $request, $productid)
+    {
+        $prod = Product::find($productid);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        if ($prod->locked) {
+            Session::flash('error', 'Продукт блокирован, у Вас нет доступа к созданию отчётов здесь!');
+            return redirect()->route('products.show', ['id' => $productid]);
+        }
+        if ($prod->getLatestVersion() == null) {
+            Session::flash('error',
+                'У продукта нет опубликованных версий, попросите администратора добавить хотябы одну версию продукта!');
+            return redirect()->route('products.show', ['id' => $productid]);
+        }
+        $validator = Validator::make($request->input(), [
+            'steps' => ['required'],
+            'actually' => ['required', 'max:450'],
+            'expectedly' => ['required', 'max:450'],
+            'type' => ['required', 'digits_between:0,7'],
+            'priority' => ['required', 'digits_between:0,4']
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', 'Проверьте значения полей!');
+            return redirect()->back()->withInput();
+        }
+        $dataset = [
+            'product' => $productid,
+            'author' => session()->get('id'),
+            'name' => $request->name,
+            'version' => $prod->getLatestVersion()->id,
+            'steps' => nl2br(e($request->steps)),
+            'actually' => $request->actually,
+            'expectedly' => $request->expectedly,
+            'type' => $request->type,
+            'priority' => $request->priority
+        ];
+        Bug::create($dataset);
+        Session::flash('success', sprintf('Создан новый отчёт «%s» для продукта «%s»', $dataset['name'], $prod->name));
+        return redirect()->route('home');
+    }
+
+    public function showBug($id)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if ($bug->getPriority() == 'Уязвимость' && !($prod->isModerator(session()->get('id') ||
+                    session()->get('isglmod')) || $author->user_id == session()->get('id'))) {
+            Session::flash('error', 'Мы не можем отобразить Вам данный отчёт!');
+            return redirect()->route('home');
+        }
+        $author = $author->getVkInfo();
+        return view('bugs.show', compact('bug', 'prod', 'author'));
     }
 }
