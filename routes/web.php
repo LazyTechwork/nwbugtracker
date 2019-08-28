@@ -50,6 +50,7 @@ Route::middleware('sessioned')->group(function () {
         Route::get('show/{id}', 'HomeController@showBug')->name('show');
         Route::get('new/{productid}', 'HomeController@newBugV')->name('newbugV');
         Route::post('new/{productid}', 'HomeController@newBug')->name('newbug');
+        Route::post('statusupdate/{id}', 'HomeController@updateBug')->name('updateStatus');
     });
 });
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');

@@ -112,7 +112,7 @@ class Bug extends Model
 
     public function getBugUpdates()
     {
-        return $this->hasMany(BugUpdate::class, 'bug_id', 'id');
+        return $this->hasMany(BugUpdate::class, 'bug_id', 'id')->orderBy('time', 'desc');
     }
 
     public function getProduct()
@@ -120,8 +120,19 @@ class Bug extends Model
         return $this->belongsTo(Product::class, 'product');
     }
 
+    public function getProductVersion()
+    {
+        $ver = ProductUpdate::find($this->version);
+        if($ver == null) return null;
+        return $ver->version;
+    }
+
     public function isActualVersion()
     {
-        if ($this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id) return true; else return false;
+        if ($this->status != 2 && $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id) return true; else return false;
+    }
+
+    public function canBeReopened() {
+        return in_array($this->status,[4,8,9]);
     }
 }

@@ -14,13 +14,13 @@
                             <div class="card-body">
                                 <h4 class="card-title">Статистика</h4>
                                 <h5 class="card-text">Отчётов <span
-                                            class="badge badge-secondary">{{ $bugs->count() }}</span><br>
+                                            class="badge badge-secondary">{{ $prodstat[0] }}</span><br>
                                     Открыто <span
-                                            class="badge badge-primary">{{ $bugs->where('status', '1')->count() }}</span><br>
+                                            class="badge badge-primary">{{ $prodstat[1] }}</span><br>
                                     В обработке <span
-                                            class="badge badge-warning">{{ $bugs->where('status', '2')->count() }}</span><br>
+                                            class="badge badge-warning">{{ $prodstat[2] }}</span><br>
                                     Исправлено <span
-                                            class="badge badge-success">{{ $bugs->where('status', '3')->count() }}</span>
+                                            class="badge badge-success">{{ $prodstat[3] }}</span>
                                 </h5>
                                 <div class="mb-2">
                                     @if(!$prod->locked)

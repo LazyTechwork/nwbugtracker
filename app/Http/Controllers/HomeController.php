@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Bug;
+use App\BugUpdate;
 use App\Product;
 use App\ProductUpdate;
 use App\User;
@@ -41,9 +42,27 @@ class HomeController extends Controller
     public function showProduct(Request $request, $id)
     {
         $prod = Product::find($id);
-        $bugs = $prod->getBugs();
+        $bugs = $prod->getBugs;
         $updates = $prod->getProductVersions;
-        return view('products.show', compact('prod', 'bugs', 'updates'));
+        $prodstat = [0, 0, 0, 0];
+        foreach ($bugs as $bug) {
+            $prodstat[0]++;
+            switch ($bug->status) {
+                case 0:
+                case 3:
+                    $prodstat[1]++;
+                    break;
+                case 1:
+                    $prodstat[2]++;
+                    break;
+                case 2:
+                    $prodstat[3]++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        return view('products.show', compact('prod', 'prodstat', 'updates'));
     }
 
     public function showModerators($id)
@@ -176,7 +195,7 @@ class HomeController extends Controller
         $upd = ProductUpdate::create($dataset);
         Session::flash('success',
             sprintf('Мы добавили обновление продукта с версией «%s», которое будет доступно «%s»',
-            $upd->version, Carbon::make($upd->time)->format('d.m.Y H:i')));
+                $upd->version, Carbon::make($upd->time)->format('d.m.Y H:i')));
         return redirect()->route('products.show', ['id' => $id]);
     }
 
@@ -306,9 +325,9 @@ class HomeController extends Controller
             'type' => $request->type,
             'priority' => $request->priority
         ];
-        Bug::create($dataset);
+        $bugid = Bug::create($dataset);
         Session::flash('success', sprintf('Создан новый отчёт «%s» для продукта «%s»', $dataset['name'], $prod->name));
-        return redirect()->route('home');
+        return redirect()->route('bugs.show', ['id' => $bugid]);
     }
 
     public function showBug($id)
@@ -324,12 +343,56 @@ class HomeController extends Controller
             return redirect()->route('home');
         }
         $author = $bug->getAuthor;
-        if ($bug->getPriority() == 'Уязвимость' && !($prod->isModerator(session()->get('id') ||
-                    session()->get('isglmod')) || $author->user_id == session()->get('id'))) {
+        if ($bug->getPriority() == 'Уязвимость' && !($prod->isModerator(session()->get('id')) ||
+                session()->get('isglmod') || $author->user_id == session()->get('id'))) {
             Session::flash('error', 'Мы не можем отобразить Вам данный отчёт!');
             return redirect()->route('home');
         }
         $author = $author->getVkInfo();
-        return view('bugs.show', compact('bug', 'prod', 'author'));
+        $updates = $bug->getBugUpdates;
+        return view('bugs.show', compact('bug', 'prod', 'author', 'updates'));
+    }
+
+    public function updateBug(Request $request, $id)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if (!($prod->isModerator(session()->get('id')) || session()->get('isglmod') || ($author->user_id == session()->get('id') && $bug->canBeReopened()))) {
+            Session::flash('error', 'У Вас недостаточно прав для изменения статуса данного отчёта');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+        $reopening = ($author->user_id == session()->get('id') && $bug->canBeReopened()) && !($prod->isModerator(session()->get('id')) || session()->get('isglmod'));
+        if ($reopening)
+            $request->merge(['status' => 3, 'reward' => 0]);
+        $validator = Validator::make($request->input(), [
+            'status' => ['required', 'digits_between:0,10'],
+            'reward' => ['required', 'numeric', 'gte:0', 'lte:10000']
+        ]);
+        if ($validator->fails()) {
+            Session::flash('error', 'Вы указали неверный статус или неправильно ввели вознаграждение (от 0 до 10000)!');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+
+        BugUpdate::create([
+            'bug_id' => $id,
+            'author' => $author->user_id,
+            'status' => $request->status,
+            'comment' => $request->comment != null ? nl2br(e($request->comment)) : null,
+            'time' => Carbon::now()->toDateTimeString(),
+            'hidden' => !$reopening
+        ]);
+        $bug->status = $request->status;
+        if ($bug->reward != -1 && !$reopening) $bug->reward = $request->reward;
+        $bug->save();
+        return redirect()->route('bugs.show', ['id' => $id]);
     }
 }
