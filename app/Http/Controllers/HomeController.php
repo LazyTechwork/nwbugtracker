@@ -416,7 +416,19 @@ class HomeController extends Controller
             return redirect()->route('bugs.show', ['id' => $id]);
         }
         if ($actual != 1) {
-            return redirect()->route('bugs.updateStatus', ['id' => $id])->with(['_token' => csrf_token(), 'status' => 4, 'comment' => 'Закрыт по причине не актуальности', 'hideauthor' => false]);
+            BugUpdate::create([
+                'bug_id' => $id,
+                'author' => $author->user_id,
+                'status' => 4,
+                'comment' => 'Закрыт по причине не актуальности',
+                'time' => Carbon::now()->toDateTimeString(),
+                'hidden' => false
+            ]);
+            $bug->status = 4;
+            $bug->reward = 0;
+            $bug->save();
+            Session::flash('success', 'Отчёт закрыт');
+            return redirect()->route('bugs.show', ['id' => $id]);
         } else {
             $bug->version = $prod->getLatestVersion()->id;
             $bug->save();

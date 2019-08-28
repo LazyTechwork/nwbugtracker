@@ -128,11 +128,11 @@ class Bug extends Model
     }
 
     public function canBeReopened() {
-        return in_array($this->status, [4,8,9]);
+        return in_array($this->status, [8,9]);
     }
 
     public function isActualVersion()
     {
-        return !$this->canBeReopened() && $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id;
+        return !$this->canBeReopened() || $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id;
     }
 }
