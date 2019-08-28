@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use function Psy\debug;
 
 class HomeController extends Controller
 {
@@ -388,11 +389,39 @@ class HomeController extends Controller
             'status' => $request->status,
             'comment' => $request->comment != null ? nl2br(e($request->comment)) : null,
             'time' => Carbon::now()->toDateTimeString(),
-            'hidden' => !$reopening
+            'hidden' => !$reopening || $request->hideauthor
         ]);
         $bug->status = $request->status;
         if ($bug->reward != -1 && !$reopening) $bug->reward = $request->reward;
         $bug->save();
+        Session::flash('success', 'Статус отчёта успешно изменен');
         return redirect()->route('bugs.show', ['id' => $id]);
+    }
+
+    public function actualize($id, $actual)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if (!(!$bug->isActualVersion() && $author->user_id == session()->get('id') && $bug->canBeReopened())) {
+            Session::flash('error', 'У Вас недостаточно прав для изменения статуса данного отчёта');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+        if ($actual != 1) {
+            return redirect()->route('bugs.updateStatus', ['id' => $id])->with(['_token' => csrf_token(), 'status' => 4, 'comment' => 'Закрыт по причине не актуальности', 'hideauthor' => false]);
+        } else {
+            $bug->version = $prod->getLatestVersion()->id;
+            $bug->save();
+            Session::flash('success', 'Помечено как актуально');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
     }
 }

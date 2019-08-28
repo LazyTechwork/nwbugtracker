@@ -104,15 +104,15 @@
                         <div class="col-md-9">
                             <div class="card-body">
                                 <h4 class="card-title">Информация</h4>
-                                @if(!$bug->isActualVersion())
+                                @if(!$bug->isActualVersion() && session()->get('id') == $author->user_id)
                                     <div class="card">
                                         <div class="card-body">
-                                            <p>Актуально в версии {{ $prod->getLatestVersion()->version }}? <br>
+                                            <p>Актуально в версии <strong>{{ $prod->getLatestVersion()->version }}</strong>? <br>
                                                 Опубликовано обновление для <strong>{{ $prod->name }}</strong>.
                                                 Пожалуйста,
                                                 проверьте, решена ли проблема в новой версии.</p>
-                                            <p class="mb-0"><a href="#" class="btn btn-primary">Актуально</a> <a
-                                                        href="#"
+                                            <p class="mb-0"><a href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>1]) }}" class="btn btn-primary">Актуально</a> <a
+                                                        href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>0]) }}"
                                                         class="btn btn-light">Нет,
                                                     закрыть отчёт</a></p>
                                         </div>

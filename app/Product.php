@@ -32,7 +32,7 @@ class Product extends Model
 
     public function getProductVersions()
     {
-        return $this->hasMany(ProductUpdate::class, 'product');
+        return $this->hasMany(ProductUpdate::class, 'product')->orderBy('time', 'desc');
     }
 
     public function getImage()

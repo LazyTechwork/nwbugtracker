@@ -127,12 +127,12 @@ class Bug extends Model
         return $ver->version;
     }
 
-    public function isActualVersion()
-    {
-        if ($this->status != 2 && $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id) return true; else return false;
+    public function canBeReopened() {
+        return in_array($this->status, [4,8,9]);
     }
 
-    public function canBeReopened() {
-        return in_array($this->status,[4,8,9]);
+    public function isActualVersion()
+    {
+        return !$this->canBeReopened() && $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id;
     }
 }
