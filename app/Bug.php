@@ -112,7 +112,7 @@ class Bug extends Model
 
     public function getBugUpdates()
     {
-        return $this->hasMany(BugUpdate::class, 'bug_id', 'id')->orderBy('time', 'desc');
+        return $this->hasMany(BugUpdate::class, 'bug_id', 'id')->orderBy('time', 'asc');
     }
 
     public function getProduct()
