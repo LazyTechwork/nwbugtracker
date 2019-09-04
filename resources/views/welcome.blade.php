@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="{{ route('home') }}" class="btn btn-primary">Перейти к приложению</a>
+                    <a href="{{ route('login') }}" class="btn btn-primary">Перейти к приложению</a>
                 </div>
             </div>
         </div>
