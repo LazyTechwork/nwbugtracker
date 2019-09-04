@@ -24,7 +24,7 @@
 </head>
 <body class="d-flex flex-column h-100">
 <div id="app" class="d-flex flex-column h-100 bg-white">
-    <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-laravel">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-laravel bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ route('login') }}">
                 <img src="{{ asset('img/nwbugtracker.svg') }}" height="30" alt="">
