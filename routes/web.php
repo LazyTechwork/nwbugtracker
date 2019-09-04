@@ -13,11 +13,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
-
 Auth::routes(['register' => false, 'reset' => false]);
+
+Route::get('/', 'Auth\LoginController@welcome');
 
 Route::middleware('sessioned')->group(function () {
     Route::get('home', 'HomeController@index')->name('home');

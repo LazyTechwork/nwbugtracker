@@ -41,7 +41,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout', 'welcome');
     }
 
     public function showLoginForm(Request $request)
@@ -85,5 +85,10 @@ class LoginController extends Controller
         session()->remove('id');
         session()->flush();
         return redirect()->route('login')->with(['success' => 'Мы удалили всю конфиденциальную информацию о Вас, поэтому не беспокойтесь за Ваши данные. Удачи в жизни!']);
+    }
+
+    public function welcome()
+    {
+        return view('welcome');
     }
 }
