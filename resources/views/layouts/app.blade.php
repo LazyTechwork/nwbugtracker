@@ -85,14 +85,17 @@
     </main>
     <footer class="footer mt-auto py-4">
         <div class="container-fluid">
-            <div class="row text-center">
-                <div class="col-md-10">
+            <div class="row text-center justify-content-center">
+                <div class="col-md-3">
                     <div class="text-muted">NeoWave Bug-tracker (World Bots Edition)</div>
-                    <div class="text-muted">Copyright <a href="//vk.com/tekly">Tekly Technologies in head of Ivan Petrov</a>
+                    <div class="text-muted">Copyright <a href="//vk.com/tekly">Tekly Technologies</a>
                         &copy; {{ date('Y') }}</div>
                 </div>
                 <div class="col-md-2">
-                    {{--<div class="text-muted"><a href="{{ route('legal.index') }}">{{ __('app.legal.header') }}</a></div>--}}
+                    <a href="#" class="text-muted">Правила пользования</a>
+                    <div class="text-muted">Версия <b>1.2.2</b></div>
+                </div>
+                <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>
                 </div>
             </div>
