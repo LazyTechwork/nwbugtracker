@@ -30,6 +30,11 @@ class HomeController extends Controller
         return view('home', compact('user', 'userdb'));
     }
 
+    public function terms()
+    {
+        return view('terms');
+    }
+
 
 //    PRODUCTS
 

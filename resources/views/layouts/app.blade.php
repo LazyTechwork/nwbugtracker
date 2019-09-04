@@ -23,7 +23,7 @@
     <link rel="shortcut icon" href="{{asset('img/nw_icon.png')}}" type="image/png">
 </head>
 <body class="d-flex flex-column h-100">
-<div id="app" class="d-flex flex-column h-100">
+<div id="app" class="d-flex flex-column h-100 bg-white">
     <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-laravel">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
@@ -62,7 +62,7 @@
             </div>
         </div>
     </nav>
-    <main class="py-5 flex-shrink-0">
+    <main class="py-5 flex-shrink-0 bg-white">
         <div class="container mt-4">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -83,7 +83,7 @@
         </div>
         @yield('content')
     </main>
-    <footer class="footer mt-auto py-4">
+    <footer class="footer mt-auto py-4 bg-light">
         <div class="container-fluid">
             <div class="row text-center justify-content-center">
                 <div class="col-md-3">
@@ -92,8 +92,8 @@
                         &copy; {{ date('Y') }}</div>
                 </div>
                 <div class="col-md-2">
-                    <a href="#" class="text-muted">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.2.2</b></div>
+                    <a href="{{ route('terms') }}" class="text-muted">Правила пользования</a>
+                    <div class="text-muted">Версия <b>1.2.4</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>
