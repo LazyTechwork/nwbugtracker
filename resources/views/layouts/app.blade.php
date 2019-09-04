@@ -26,7 +26,7 @@
 <div id="app" class="d-flex flex-column h-100 bg-white">
     <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-laravel">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
+            <a class="navbar-brand" href="{{ route('login') }}">
                 <img src="{{ asset('img/nwbugtracker.svg') }}" height="30" alt="">
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -37,26 +37,26 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Профиль</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('bugs.index') }}">Отчёты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Продукты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('testers.index') }}">Участники</a></li>
-                </ul>
+                @if(session()->has('vktoken'))
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Профиль</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bugs.index') }}">Отчёты</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Продукты</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('testers.index') }}">Участники</a></li>
+                    </ul>
+            @endif
 
-                <!-- Right Side Of Navbar -->
+            <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('bugs.my') }}">Мои отчёты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('shop.index') }}">Магазин</a></li>
                     <!-- Authentication Links -->
                     @if(!session()->has('vktoken'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Вход</a>
                         </li>
                     @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('logout') }}">Выход</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bugs.my') }}">Мои отчёты</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('shop.index') }}">Магазин</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Выход</a></li>
                     @endguest
                 </ul>
             </div>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-md-2">
                     <a href="{{ route('terms') }}" class="text-muted">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.2.4</b></div>
+                    <div class="text-muted">Версия <b>1.2.5</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>

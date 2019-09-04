@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['register' => false, 'reset' => false]);
 
 Route::get('/', 'Auth\LoginController@welcome');
+Route::get('terms', 'HomeController@terms')->name('terms');
 
 Route::middleware('sessioned')->group(function () {
     Route::get('home', 'HomeController@index')->name('home');
-    Route::get('terms', 'HomeController@terms')->name('terms');
     Route::middleware('glmod')->group(function () {
         Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
     });
