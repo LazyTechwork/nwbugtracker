@@ -6,9 +6,9 @@
             <div class="col-md-12">
                 <div class="card w-100">
                     <h4 class="card-header">{{ $prod->name }} @if($prod->locked)(БЛОКИРОВАН)@endif</h4>
-                    <div class="row no-gutters">
+                    <div class="row no-gutters py-2 px-2">
                         <div class="col-md-3">
-                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid" alt="">
+                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded" alt="">
                         </div>
                         <div class="col-md-9">
                             <div class="card-body">

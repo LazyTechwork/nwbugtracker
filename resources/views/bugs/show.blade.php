@@ -8,7 +8,7 @@
                     <h4 class="card-header">{{ $bug->name }}</h4>
                     <div class="row no-gutters px-2">
                         <div class="col-md-3">
-                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid" alt=""><br>
+                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded" alt=""><br>
                             @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
                                 <button href="#" class="btn btn-light w-100" data-toggle="modal"
                                         data-target="#changeStatus">Изменить статус
