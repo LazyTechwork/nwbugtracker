@@ -12,7 +12,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use function Psy\debug;
 
 class HomeController extends Controller
 {
@@ -267,6 +266,12 @@ class HomeController extends Controller
         return view('bugs.index', compact('bugs'));
     }
 
+    public function myBugs()
+    {
+        $bugs = Bug::where('author', \session()->get('id'))->orderBy('created_at', 'desc')->paginate(15);
+        return view('bugs.index', compact('bugs'));
+    }
+
     public function newBugV($productid)
     {
         $prod = Product::find($productid);
@@ -435,5 +440,13 @@ class HomeController extends Controller
             Session::flash('success', 'Помечено как актуально');
             return redirect()->route('bugs.show', ['id' => $id]);
         }
+    }
+
+
+//    SHOP
+
+    public function shopIndex()
+    {
+        return view('shop.index');
     }
 }

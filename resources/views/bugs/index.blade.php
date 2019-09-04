@@ -10,6 +10,7 @@
                     @foreach($bugs as $bug)
                         @php
                             $info = $bug->getAuthor->getVkInfo();
+                            $prod = $bug->getProduct;
                         @endphp
                         @if(!($bug->getPriority() == 'Уязвимость' && !($prod->isModerator(session()->get('id') || session()->get('isglmod')) || $bug->getAuthor->user_id == session()->get('id'))))
                             <tr>

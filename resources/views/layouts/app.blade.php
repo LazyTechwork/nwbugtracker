@@ -46,8 +46,8 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Мои отчёты</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Магазин</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('bugs.my') }}">Мои отчёты</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('shop.index') }}">Магазин</a></li>
                     <!-- Authentication Links -->
                     @if(!session()->has('vktoken'))
                         <li class="nav-item">
