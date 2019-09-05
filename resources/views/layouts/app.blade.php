@@ -92,8 +92,8 @@
                         &copy; {{ date('Y') }}</div>
                 </div>
                 <div class="col-md-2">
-                    <a href="{{ route('terms') }}" class="text-muted">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.2.9</b></div>
+                    <a href="{{ route('terms') }}">Правила пользования</a>
+                    <div class="text-muted">Версия <b>1.2.11</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>
