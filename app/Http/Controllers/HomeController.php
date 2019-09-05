@@ -394,7 +394,7 @@ class HomeController extends Controller
         }
 
         BugUpdate::create([
-            'bug_id' => $id,a
+            'bug_id' => $id,
             'author' => \session()->get('id'),
             'status' => $request->status,
             'comment' => $request->comment != null ? nl2br(e($request->comment)) : null,
