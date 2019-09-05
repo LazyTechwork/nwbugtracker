@@ -12,12 +12,19 @@
                             $info = $tester->getVkInfo();
                         @endphp
                         <tr>
-                            <td style="width: 50px;"><img src="{{ $info->photo_200 }}" class="rounded-circle" alt=""
-                                                          width="50"></td>
+                            <td style="width: 50px;">@if($info != null)<img src="{{ $info->photo_200 }}"
+                                                                            class="rounded-circle" alt=""
+                                                                            width="50">@endif</td>
                             <td class="align-middle">
-                                <a href="{{ route('testers.show', ['id'=>$tester->user_id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
-                                <p class="mb-0">Отчётов: <strong>{{ $tester->getBugs->count() }}</strong></p>
-                                @if($tester->kick) <p class="text-muted mb-0">Исключён из программы тестирования</p> @endif
+                                @if($info != null)
+                                    <a href="{{ route('testers.show', ['id'=>$tester->user_id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
+                                    <p class="mb-0">Отчётов: <strong>{{ $tester->getBugs->count() }}</strong></p>
+                                    @if($tester->kick) <p class="text-muted mb-0">Исключён из программы
+                                        тестирования</p> @endif
+                                @else
+                                    <p class="mb-0 text-muted">Не найдено информации в базе данных по тестировщику с
+                                        ID {{ $tester->user_id }}</p>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
