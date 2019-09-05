@@ -394,8 +394,8 @@ class HomeController extends Controller
         }
 
         BugUpdate::create([
-            'bug_id' => $id,
-            'author' => $author->user_id,
+            'bug_id' => $id,a
+            'author' => \session()->get('id'),
             'status' => $request->status,
             'comment' => $request->comment != null ? nl2br(e($request->comment)) : null,
             'time' => Carbon::now()->toDateTimeString(),
