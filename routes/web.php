@@ -53,6 +53,8 @@ Route::middleware('sessioned')->group(function () {
         Route::get('show/{id}', 'HomeController@showBug')->name('show');
         Route::get('new/{productid}', 'HomeController@newBugV')->name('newbugV');
         Route::post('new/{productid}', 'HomeController@newBug')->name('newbug');
+        Route::get('edit/{id}', 'HomeController@editBugV')->name('editbugV');
+        Route::post('edit/{id}', 'HomeController@editBug')->name('editbug');
         Route::post('statusupdate/{id}', 'HomeController@updateBug')->name('updateStatus');
         Route::get('actualitychange/{id}/{actual}', 'HomeController@actualize')->name('actualityChange');
         Route::get('my', 'HomeController@myBugs')->name('my');

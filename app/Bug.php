@@ -135,4 +135,8 @@ class Bug extends Model
     {
         return !$this->canBeReopened() || $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id;
     }
+
+    public function getNLsteps() {
+        return preg_replace('/<br(\s+)?\/?>/i', "\n", $this->steps);
+    }
 }

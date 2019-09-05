@@ -386,6 +386,7 @@ class HomeController extends Controller
             return redirect()->route('products.show', ['id' => $productid]);
         }
         $validator = Validator::make($request->input(), [
+            'name' => ['required'],
             'steps' => ['required'],
             'actually' => ['required', 'max:450'],
             'expectedly' => ['required', 'max:450'],
@@ -411,6 +412,89 @@ class HomeController extends Controller
         $bugid = Bug::create($dataset);
         Session::flash('success', sprintf('Создан новый отчёт «%s» для продукта «%s»', $dataset['name'], $prod->name));
         return redirect()->route('bugs.show', ['id' => $bugid]);
+    }
+
+    public function editBugV($id)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if ($author->user_id != session()->get('id')) {
+            Session::flash('error', 'У Вас недостаточно прав для изменения данного отчёта');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+        if(!$bug->canBeReopened() && $bug->status != 0) {
+            Session::flash('error', 'Невозможно редактировать отчёт!');
+            return redirect()->route('bugs.show', ['id'=>$id]);
+        }
+        return view('bugs.editbug', compact('bug', 'prod'));
+    }
+
+    public function editBug(Request $request, $id)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if ($author->user_id != session()->get('id')) {
+            Session::flash('error', 'У Вас недостаточно прав для изменения данного отчёта');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+        if(!$bug->canBeReopened() && $bug->status != 0) {
+            Session::flash('error', 'Невозможно редактировать отчёт!');
+            return redirect()->route('bugs.show', ['id'=>$id]);
+        }
+        $validator = Validator::make($request->input(), [
+            'name' => ['required'],
+            'steps' => ['required'],
+            'actually' => ['required', 'max:450'],
+            'expectedly' => ['required', 'max:450'],
+            'type' => ['required', 'digits_between:0,7'],
+            'priority' => ['required', 'digits_between:0,4']
+        ]);
+
+        if ($validator->fails()) {
+            Session::flash('error', 'Проверьте значения полей!');
+            return redirect()->back()->withInput();
+        }
+        $dataset = [
+            'name' => $request->name,
+            'version' => $prod->getLatestVersion()->id,
+            'steps' => nl2br(e($request->steps)),
+            'actually' => $request->actually,
+            'expectedly' => $request->expectedly,
+            'type' => $request->type,
+            'priority' => $request->priority
+        ];
+        if ($bug->canBeReopened()) {
+            $dataset['status'] = 3;
+            BugUpdate::create([
+                'bug_id' => $id,
+                'author' => \session()->get('id'),
+                'status' => 3,
+                'comment' => 'Отчёт отредактирован и автоматически был переоткрыт',
+                'time' => Carbon::now()->toDateTimeString(),
+                'hidden' => false
+            ]);
+        }
+        $bug->update($dataset);
+        Session::flash('success', sprintf('Отчёт «%s» для продукта «%s» отредактирован', $dataset['name'], $prod->name));
+        return redirect()->route('bugs.show', ['id' => $bug->id]);
     }
 
     public function showBug($id)

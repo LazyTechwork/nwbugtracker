@@ -5,12 +5,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card w-100">
-                    <h4 class="card-header">{{ $bug->name }}</h4>
                     <div class="row no-gutters px-2">
                         <div class="col-md-3">
                             <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded" alt=""><br>
                             @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
-                                <button href="#" class="btn btn-light w-100" data-toggle="modal"
+                                <button href="#" class="btn btn-light w-100 mb-1" data-toggle="modal"
                                         data-target="#changeStatus">Изменить статус
                                 </button>
                                 <div class="modal fade" id="changeStatus" tabindex="-1" role="dialog"
@@ -64,7 +63,7 @@
                                     </div>
                                 </div>
                             @elseif ($bug->canBeReopened() && session()->get('id') == $author->user_id)
-                                <button href="#" class="btn btn-light w-100" data-toggle="modal"
+                                <button href="#" class="btn btn-light w-100 mb-1" data-toggle="modal"
                                         data-target="#changeStatus">Переоткрыть
                                 </button>
                                 <div class="modal fade" id="changeStatus" tabindex="-1" role="dialog"
@@ -101,10 +100,13 @@
                                     </div>
                                 </div>
                             @endif
+                            @if(($bug->canBeReopened() || $bug->status == 0) && session()->get('id') == $author->user_id)
+                                <a href="{{ route('bugs.editbugV', ['id'=>$bug->id]) }}" class="btn btn-light w-100">Редактировать
+                                    отчёт</a>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="card-body">
-                                <h4 class="card-title">Информация</h4>
                                 @if(!$bug->isActualVersion() && session()->get('id') == $author->user_id)
                                     <div class="card">
                                         <div class="card-body">
@@ -122,16 +124,7 @@
                                         </div>
                                     </div> <br>
                                 @endif
-                                <p class="mb-0">От <strong><a
-                                            href="{{ route('testers.show', ['id'=>$author->user_id]) }}">{{ $author->last_name . ' ' . $author->first_name }}</a></strong>
-                                    в продукте <strong><a
-                                            href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a></strong>
-                                    с версией <strong>{{ $bug->getProductVersion() }}</strong>
-                                </p>
-                                <p>Текущий статус <span
-                                        class="badge badge-{{ $bug->getStatusColor() }}">{{ $bug->getStatus() }}</span>
-                                    &centerdot; Создан {{ $bug->created_at->locale('ru_RU')->diffForHumans() }}</p>
-
+                                <h4 class="card-title">{{ $bug->name }}</h4>
                                 <h5 class="card-title">Шаги воспроизведения</h5>
                                 <p>{!! $bug->steps !!}</p>
 
@@ -140,8 +133,26 @@
 
                                 <h5 class="card-title">Ожидаемый результат</h5>
                                 <p>{{ $bug->expectedly }}</p>
-
-                                <h4 class="card-title">Обновления</h4>
+                                <hr>
+                                <p class="mb-0">Автор <strong><a
+                                            href="{{ route('testers.show', ['id'=>$author->user_id]) }}">{{ $author->last_name . ' ' . $author->first_name }}</a></strong>
+                                </p>
+                                <p class="mb-0">Продукт <strong><a
+                                            href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a></strong>
+                                </p>
+                                <p class="mb-0">Версия <strong>{{ $bug->getProductVersion() }}</strong></p>
+                                <p class="mb-0">Текущий статус <span
+                                        class="badge badge-{{ $bug->getStatusColor() }}">{{ $bug->getStatus() }}</span>
+                                </p>
+                                <p class="mb-0">Тип проблемы <strong>{{ $bug->getType() }}</strong></p>
+                                <p class="mb-0">Приоритет <strong>{{ $bug->getPriority() }}</strong></p>
+                                @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                    <p class="mb-0">Вознаграждение <strong>{{ $bug->reward }}</strong></p>
+                                @endif
+                                <p class="mb-0">Создан <strong>{{ $bug->created_at->locale('ru_RU')->diffForHumans() }}</strong></p>
+                                <p class="mb-0">Обновлено <strong>{{ $bug->updated_at->locale('ru_RU')->diffForHumans() }}</strong></p>
+                                <hr>
+                                <h5 class="card-title">Обновления</h5>
                                 @forelse($updates as $upd)
                                     @php $upda = $upd->getAuthor; $updavk = $upda->getVkInfo(); @endphp
                                     <p>
