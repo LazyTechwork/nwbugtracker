@@ -24,6 +24,13 @@ class IsSessioned
                 \session()->flush();
                 return redirect()->route('login')->with(['error' => 'К сожалению время сессии истекло, это сделано в целях безопасности. Пожалуйста авторизуйтесь заново!']);
             }
+            $whitelist = [362551208, 538327743, 242521347];
+            $whitelist_enabled = true;
+            if ($whitelist_enabled && !in_array(\session()->get('id'), $whitelist)) {
+                Session::flush();
+                Session::flash('error', 'К сожалению Баг-трекер сейчас доступен только избранным тестировщикам!');
+                return redirect()->route('login');
+            }
             $tester = User::find(\session()->get('id'));
             if ($tester->kick)
                 if ($request->routeIs('home')) return $next($request); else {
