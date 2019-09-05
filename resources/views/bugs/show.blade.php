@@ -104,6 +104,9 @@
                                 <a href="{{ route('bugs.editbugV', ['id'=>$bug->id]) }}" class="btn btn-light w-100">Редактировать
                                     отчёт</a>
                             @endif
+                            @if($prod->isModerator(session()->get('id')) || session()->get('isglmod') || ($author->user_id == session()->get('id') && ($bug->canBeReopened() || $bug->status == 0 || $bug->status == 3)))
+                                <a href="{{ route('bugs.delbug') }}" class="btn btn-light w-100">Удалить отчёт</a>
+                            @endif
                         </div>
                         <div class="col-md-9">
                             <div class="card-body">
@@ -149,8 +152,10 @@
                                 @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
                                     <p class="mb-0">Вознаграждение <strong>{{ $bug->reward }}</strong></p>
                                 @endif
-                                <p class="mb-0">Создан <strong>{{ $bug->created_at->locale('ru_RU')->diffForHumans() }}</strong></p>
-                                <p class="mb-0">Обновлено <strong>{{ $bug->updated_at->locale('ru_RU')->diffForHumans() }}</strong></p>
+                                <p class="mb-0">Создан
+                                    <strong>{{ $bug->created_at->locale('ru_RU')->diffForHumans() }}</strong></p>
+                                <p class="mb-0">Обновлено
+                                    <strong>{{ $bug->updated_at->locale('ru_RU')->diffForHumans() }}</strong></p>
                                 <hr>
                                 <h5 class="card-title">Обновления</h5>
                                 @forelse($updates as $upd)

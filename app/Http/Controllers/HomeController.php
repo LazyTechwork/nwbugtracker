@@ -220,7 +220,7 @@ class HomeController extends Controller
         $prod->locked = !$prod->locked;
         $prod->save();
         Session::flash('success', 'Продукт успешно заблокирован/разблокирован!');
-        return redirect()->route('products.show', ['id'=>$prod->id]);
+        return redirect()->route('products.show', ['id' => $prod->id]);
     }
 
     public function newUpdateV($id)
@@ -431,9 +431,9 @@ class HomeController extends Controller
             Session::flash('error', 'У Вас недостаточно прав для изменения данного отчёта');
             return redirect()->route('bugs.show', ['id' => $id]);
         }
-        if(!$bug->canBeReopened() && $bug->status != 0) {
+        if (!$bug->canBeReopened() && $bug->status != 0) {
             Session::flash('error', 'Невозможно редактировать отчёт!');
-            return redirect()->route('bugs.show', ['id'=>$id]);
+            return redirect()->route('bugs.show', ['id' => $id]);
         }
         return view('bugs.editbug', compact('bug', 'prod'));
     }
@@ -455,9 +455,9 @@ class HomeController extends Controller
             Session::flash('error', 'У Вас недостаточно прав для изменения данного отчёта');
             return redirect()->route('bugs.show', ['id' => $id]);
         }
-        if(!$bug->canBeReopened() && $bug->status != 0) {
+        if (!$bug->canBeReopened() && $bug->status != 0) {
             Session::flash('error', 'Невозможно редактировать отчёт!');
-            return redirect()->route('bugs.show', ['id'=>$id]);
+            return redirect()->route('bugs.show', ['id' => $id]);
         }
         $validator = Validator::make($request->input(), [
             'name' => ['required'],
@@ -518,6 +518,28 @@ class HomeController extends Controller
         $author = $author->getVkInfo();
         $updates = $bug->getBugUpdates;
         return view('bugs.show', compact('bug', 'prod', 'author', 'updates'));
+    }
+
+    public function deleteBug($id)
+    {
+        $bug = Bug::find($id);
+        if ($bug == null) {
+            Session::flash('error', 'Отчёт не найден!');
+            return redirect()->route('home');
+        }
+        $prod = $bug->getProduct;
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        $author = $bug->getAuthor;
+        if (!($prod->isModerator(session()->get('id')) || session()->get('isglmod') || ($author->user_id == session()->get('id') && ($bug->canBeReopened() || $bug->status == 0 || $bug->status == 3)))) {
+            Session::flash('error', 'У Вас недостаточно прав для удаления данного отчёта');
+            return redirect()->route('bugs.show', ['id' => $id]);
+        }
+        $bug->delete();
+        Session::flash('success', 'Отчёт удален!');
+        return redirect()->route('bugs.index');
     }
 
     public function updateBug(Request $request, $id)

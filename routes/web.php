@@ -58,6 +58,7 @@ Route::middleware('sessioned')->group(function () {
         Route::post('statusupdate/{id}', 'HomeController@updateBug')->name('updateStatus');
         Route::get('actualitychange/{id}/{actual}', 'HomeController@actualize')->name('actualityChange');
         Route::get('my', 'HomeController@myBugs')->name('my');
+        Route::get('delete/{id}', 'HomeController@deleteBug')->name('delbug');
     });
 
     Route::prefix('shop')->name('shop.')->group(function () {
