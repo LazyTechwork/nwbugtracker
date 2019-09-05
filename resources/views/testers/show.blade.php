@@ -12,6 +12,7 @@
                 @if (session()->get('isglmod'))
                     <span>Баллы: <strong>{{ $tester->points }}</strong></span><br>
                 @endif
+                <span>Отчёты: <strong>{{ $tester->getBugs->count() }}</strong></span><br>
                 @if(session()->get('isglmod') && $tester->isMod())
                     <span>Модератор: <strong>{{ $tester->moderatorName() }}</strong></span><br>
                 @endif
