@@ -16,6 +16,8 @@
                                                           width="50"></td>
                             <td class="align-middle">
                                 <a href="{{ route('testers.show', ['id'=>$tester->user_id]) }}">{{ $info->last_name . ' ' . $info->first_name }}</a>
+                                <p class="mb-0">Отчётов: {{ $tester->getBugs->count() }}</p>
+                                @if($tester->kick) <p class="text-muted mb-0">Исключён из программы тестирования</p> @endif
                             </td>
                         </tr>
                     @endforeach

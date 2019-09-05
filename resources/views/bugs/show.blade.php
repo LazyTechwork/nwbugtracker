@@ -145,9 +145,15 @@
                                 @forelse($updates as $upd)
                                     @php $upda = $upd->getAuthor; $updavk = $upda->getVkInfo(); @endphp
                                     <p>
-                                        <strong>@if($upd->hidden){{ 'Модератор #'.$upda->id }}@if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod')) (<a
-                                                href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a>)@endif @else <a
-                                                href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a> @endif
+                                        <strong>
+                                            @if($upd->hidden){{ $upda->moderatorName() }}
+                                            @if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                                <span>(<a
+                                                        href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a>)</span>
+                                            @endif
+                                            @else <a
+                                                href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a>
+                                            @endif
                                         </strong> <sup class="text-muted">{{ $upd->time->format('d.m.Y H:i') }}</sup>
                                     </p>
                                     <p class="alert alert-info">Новый статус отчёта -

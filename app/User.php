@@ -27,12 +27,17 @@ class User extends Authenticatable
 
     public function moderatorName()
     {
-        $req = DB::table('mods')->where('user_id', $this->user_id);
-        return $req->get('funny') ?? 'Модератор #' . $req->get('id');
+        $req = DB::table('mods')->where('user_id', $this->user_id)->first('funny');
+        return $req ?? 'Модератор #' . $this->id;
     }
 
     public function getVkInfo()
     {
         return DB::table('users')->where('user_id', $this->user_id)->get()[0] ?? null;
+    }
+
+    public function isMod()
+    {
+        return $this->getModeratableProducts()->count() ? true : false;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +20,17 @@ class IsSessioned
     public function handle($request, Closure $next)
     {
         if (session()->has('vktoken') && \session()->has('expire')) {
-            if(\session()->get('expire') < Carbon::now()->timestamp) {
+            if (\session()->get('expire') < Carbon::now()->timestamp) {
                 \session()->flush();
                 return redirect()->route('login')->with(['error' => 'К сожалению время сессии истекло, это сделано в целях безопасности. Пожалуйста авторизуйтесь заново!']);
             }
+            $tester = User::find(\session()->get('id'));
+            if ($tester->kick)
+                if ($request->routeIs('home')) return $next($request); else {
+                    Session::flash('error', 'Доступ к данному разделу для Вас запрещен, так как Вы исключены из программы тестирования');
+                    return redirect()->route('home');
+                }
+
             $isglmod = DB::table('global_moderators')->where('user_id', session()->get('id'))->get()->count() > 0;
             session()->put(['isglmod' => $isglmod]);
             return $next($request);

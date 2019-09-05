@@ -10,6 +10,7 @@ use App\User;
 use ATehnix\VkClient\Client;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,8 +26,14 @@ class HomeController extends Controller
     {
         $client = new Client('5.101');
         $client->setDefaultToken(session()->get('vktoken'));
-        $user = $client->request('users.get', ['fields' => 'photo_max_orig'])['response'][0];
+        $user = $client->request('users.get', ['fields' => 'photo_max_orig,photo_200,sex'])['response'][0];
         $userdb = User::find(session()->get('id'));
+        $uservk = DB::table('users')->where('user_id', \session()->get('id'))->first(['photo_200','first_name','last_name','sex']);
+        if ($uservk->photo_200 != $user['photo_200']) $uservk->photo_200 = $user['photo_200'];
+        if ($uservk->first_name != $user['first_name']) $uservk->first_name = $user['first_name'];
+        if ($uservk->last_name != $user['last_name']) $uservk->last_name = $user['last_name'];
+        if ($uservk->sex != $user['sex']) $uservk->sex = $user['sex'];
+        DB::table('users')->where('user_id', \session()->get('id'))->update(json_decode(json_encode($uservk), true));
         return view('home', compact('user', 'userdb'));
     }
 
@@ -243,7 +250,7 @@ class HomeController extends Controller
 
     public function testers(Request $request)
     {
-        $testers = User::paginate(10);
+        $testers = User::with('getBugs')->paginate(10);
         return view('testers.index', compact('testers'));
     }
 
