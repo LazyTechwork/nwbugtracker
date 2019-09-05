@@ -35,6 +35,10 @@ class Product extends Model
         return $this->hasMany(ProductUpdate::class, 'product')->orderBy('time', 'desc');
     }
 
+    public function getNLdescription() {
+        return preg_replace('/<br(\s+)?\/?>/i', "\n", $this->description);
+    }
+
     public function getImage()
     {
         return asset('img/products/' . $this->image);

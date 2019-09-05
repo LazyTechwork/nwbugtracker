@@ -35,6 +35,7 @@ Route::middleware('sessioned')->group(function () {
             Route::get('edit/{id}', 'HomeController@editProductV')->name('editprodV');
             Route::post('new', 'HomeController@newProduct')->name('newprod');
             Route::post('edit/{id}', 'HomeController@editProduct')->name('editprod');
+            Route::get('block/{id}', 'HomeController@blockProduct')->name('blockprod');
         });
         Route::prefix('update')->group(function () {
             Route::get('new/{id}', 'HomeController@newUpdateV')->name('newupdV');

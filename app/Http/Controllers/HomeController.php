@@ -28,7 +28,7 @@ class HomeController extends Controller
         $client->setDefaultToken(session()->get('vktoken'));
         $user = $client->request('users.get', ['fields' => 'photo_max_orig,photo_200,sex'])['response'][0];
         $userdb = User::find(session()->get('id'));
-        $uservk = DB::table('users')->where('user_id', \session()->get('id'))->first(['photo_200','first_name','last_name','sex']);
+        $uservk = DB::table('users')->where('user_id', \session()->get('id'))->first(['photo_200', 'first_name', 'last_name', 'sex']);
         if ($uservk->photo_200 != $user['photo_200']) $uservk->photo_200 = $user['photo_200'];
         if ($uservk->first_name != $user['first_name']) $uservk->first_name = $user['first_name'];
         if ($uservk->last_name != $user['last_name']) $uservk->last_name = $user['last_name'];
@@ -130,7 +130,17 @@ class HomeController extends Controller
 
     public function editProductV($id)
     {
+        $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        if (!session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
 
+        return view('products.edit', compact('prod'));
     }
 
     public function newProduct(Request $request)
@@ -163,12 +173,63 @@ class HomeController extends Controller
 
     public function editProduct(Request $request, $id)
     {
+        $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        if (!session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        $validator = Validator::make($request->all(), [
+            'name' => ['required'],
+            'description' => ['required'],
+            'img' => ['mimes:mimes:jpeg,png,jpg,svg', 'dimensions:ratio=1/1'],
+        ]);
+        if ($validator->fails()) {
+            Session::flash('error', 'При редактировании продукта произошла ошибка, проверьте все поля!');
+            return redirect()->back()->withInput($request->input());
+        }
+        $dataset = [
+            'name' => $request->name,
+            'description' => nl2br(e($request->description)),
+            'image' => $request->image ?? 'wb.svg',
+            'locked' => $request->has('locked'),
+        ];
+        if ($request->has('img')) {
+            $file = $request->img;
+            $dataset['image'] = 'prod_' . $prod->id . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('/img/products'), $dataset['image']);
+        }
+        $prod->update($dataset);
+        return redirect()->route('products.show', ['id' => $prod->id]);
+    }
 
+    public function blockProduct($id)
+    {
+        $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
+        if (!session()->get('isglmod')) {
+            Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
+            return redirect()->route('products.show', ['id' => $id]);
+        }
+        $prod->locked = !$prod->locked;
+        $prod->save();
+        Session::flash('success', 'Продукт успешно заблокирован/разблокирован!');
+        return redirect()->route('products.show', ['id'=>$prod->id]);
     }
 
     public function newUpdateV($id)
     {
         $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
         if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
             return redirect()->route('products.show', ['id' => $id]);
@@ -179,6 +240,10 @@ class HomeController extends Controller
     public function newUpdate(Request $request, $id)
     {
         $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден!');
+            return redirect()->route('home');
+        }
         if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
             return redirect()->route('products.show', ['id' => $id]);

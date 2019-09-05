@@ -11,6 +11,10 @@
                             <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded" alt="">
                         </div>
                         <div class="col-md-9">
+                            <div class="card-body pb-0">
+                                <h4>О продукте</h4>
+                                <p class="mb-0">{!! $prod->description !!}</p>
+                            </div>
                             <div class="card-body">
                                 <h4 class="card-title">Статистика</h4>
                                 <h5 class="card-text">Отчётов <span
@@ -33,7 +37,9 @@
                                     <a href="{{ route('products.bugs', ['id'=>$prod->id]) }}" class="btn btn-primary">Список отчётов</a>
                                     @if(session()->get('isglmod'))<a
                                             href="{{ route('products.modlist', ['id'=>$prod->id]) }}"
-                                            class="btn btn-danger">Модераторы</a> @endif
+                                            class="btn btn-danger">Модераторы</a>
+                                        <a href="{{ route('products.editprodV', ['id'=>$prod->id]) }}" class="btn btn-warning">Редактировать продукт</a>
+                                        @endif
                                     @if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod')) <a
                                             href="{{ route('products.newupdV', ['id'=>$prod->id]) }}"
                                             class="btn btn-outline-primary">Новое
