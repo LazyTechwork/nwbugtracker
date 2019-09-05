@@ -34,7 +34,8 @@
                                                                 required>
                                                             @foreach(\App\Bug::$statuses as $status)
                                                                 @if($bug->status != $loop->index)
-                                                                    <option value="{{ $loop->index }}">{{ $status }}</option>
+                                                                    <option
+                                                                        value="{{ $loop->index }}">{{ $status }}</option>
                                                                 @endif
                                                             @endforeach
                                                         </select>
@@ -107,25 +108,28 @@
                                 @if(!$bug->isActualVersion() && session()->get('id') == $author->user_id)
                                     <div class="card">
                                         <div class="card-body">
-                                            <p>Актуально в версии <strong>{{ $prod->getLatestVersion()->version }}</strong>? <br>
+                                            <p>Актуально в версии
+                                                <strong>{{ $prod->getLatestVersion()->version }}</strong>? <br>
                                                 Опубликовано обновление для <strong>{{ $prod->name }}</strong>.
                                                 Пожалуйста,
                                                 проверьте, решена ли проблема в новой версии.</p>
-                                            <p class="mb-0"><a href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>1]) }}" class="btn btn-primary">Актуально</a> <a
-                                                        href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>0]) }}"
-                                                        class="btn btn-light">Нет,
+                                            <p class="mb-0"><a
+                                                    href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>1]) }}"
+                                                    class="btn btn-primary">Актуально</a> <a
+                                                    href="{{ route('bugs.actualityChange', ['id'=>$bug->id,'actual'=>0]) }}"
+                                                    class="btn btn-light">Нет,
                                                     закрыть отчёт</a></p>
                                         </div>
                                     </div> <br>
                                 @endif
                                 <p class="mb-0">От <strong><a
-                                                href="{{ route('testers.show', ['id'=>$author->user_id]) }}">{{ $author->last_name . ' ' . $author->first_name }}</a></strong>
+                                            href="{{ route('testers.show', ['id'=>$author->user_id]) }}">{{ $author->last_name . ' ' . $author->first_name }}</a></strong>
                                     в продукте <strong><a
-                                                href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a></strong>
+                                            href="{{ route('products.show', ['id'=>$prod->id]) }}">{{ $prod->name }}</a></strong>
                                     с версией <strong>{{ $bug->getProductVersion() }}</strong>
                                 </p>
                                 <p>Текущий статус <span
-                                            class="badge badge-{{ $bug->getStatusColor() }}">{{ $bug->getStatus() }}</span>
+                                        class="badge badge-{{ $bug->getStatusColor() }}">{{ $bug->getStatus() }}</span>
                                     &centerdot; Создан {{ $bug->created_at->locale('ru_RU')->diffForHumans() }}</p>
 
                                 <h5 class="card-title">Шаги воспроизведения</h5>
@@ -141,8 +145,9 @@
                                 @forelse($updates as $upd)
                                     @php $upda = $upd->getAuthor; $updavk = $upda->getVkInfo(); @endphp
                                     <p>
-                                        <strong>@if($upd->hidden){{ 'Модератор #'.$upda->id }} @else <a
-                                                    href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a> @endif
+                                        <strong>@if($upd->hidden){{ 'Модератор #'.$upda->id }}@if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod')) (<a
+                                                href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a>)@endif @else <a
+                                                href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a> @endif
                                         </strong> <sup class="text-muted">{{ $upd->time->format('d.m.Y H:i') }}</sup>
                                     </p>
                                     <p class="alert alert-info">Новый статус отчёта -
