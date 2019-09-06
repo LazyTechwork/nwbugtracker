@@ -25,8 +25,8 @@
                     <div class="form-group">
                         <label for="prodtime">Московское время выпуска обновления <span class="text-muted">(дата и время должны быть не меньше текущего и не больше одного дня позже, для безопасности на клиентской стороне мы ограничили ввод)</span></label>
                         <input type="datetime-local" name="time" class="form-control" id="prodtime"
-                               value="{{ old('time', \Carbon\Carbon::now()->addMinutes(10)->format('Y-m-d\TH:i')) }}"
-                               min="{{ \Carbon\Carbon::now()->addMinutes(10)->format('Y-m-d\TH:i') }}"
+                               value="{{ old('time', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}"
+                               min="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
                                max="{{\Carbon\Carbon::now()->addDay()->format('Y-m-d\TH:i')}}" required>
                     </div>
                     <button type="submit" class="btn btn-success">Создать</button>
