@@ -315,7 +315,7 @@ class HomeController extends Controller
 
     public function testers(Request $request)
     {
-        $testers = User::with('getBugs')->paginate(10);
+        $testers = User::withCount('getBugs')->with('VKI')->join('users', 'testers.user_id', '=', 'users.user_id')->orderBy('get_bugs_count', 'desc')->orderBy('users.last_name')->paginate(10);
         return view('testers.index', compact('testers'));
     }
 

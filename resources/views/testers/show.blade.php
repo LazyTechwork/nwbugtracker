@@ -18,7 +18,7 @@
                 @endif
                 <span>На должности с <strong>{{ $userdb['data'] }}</strong></span><br>
                 @if($tester->kick)
-                    <span>Исключён из программы тестирование по причине: "<strong>{{ $tester->reason == 'None' ? '-' : $tester->reason }}</strong>"</span><br>
+                    <span>Исключён из программы тестирования по причине: "<strong>{{ $tester->reason == 'None' ? '-' : $tester->reason }}</strong>"</span><br>
                     @endif
             </div>
         </div>

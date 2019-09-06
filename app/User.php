@@ -36,6 +36,11 @@ class User extends Authenticatable
         return DB::table('users')->where('user_id', $this->user_id)->get()[0] ?? null;
     }
 
+    public function VKI()
+    {
+        return $this->hasOne(VKInfo::class, 'user_id', 'user_id');
+    }
+
     public function isMod()
     {
         return $this->getModeratableProducts()->count() ? true : false;
