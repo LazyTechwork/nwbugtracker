@@ -5,6 +5,14 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>Участники</h1>
+                <form action="{{ route('testers.index') }}" method="GET" class="form-inline">
+                    <div class="input-group mb-3 w-100">
+                        <input type="text" class="form-control" name="s" value="{{ e(request('s')) }}" placeholder="Поиск тестировщика" aria-label="Поиск тестировщика" aria-describedby="searchbtn">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-success" type="submit" id="searchbtn">Найти</button>
+                        </div>
+                    </div>
+                </form>
                 <table class="table">
                     <tbody>
                     @foreach($testers as $tester)

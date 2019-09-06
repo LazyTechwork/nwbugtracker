@@ -315,7 +315,11 @@ class HomeController extends Controller
 
     public function testers(Request $request)
     {
-        $testers = User::withCount('getBugs')->with('VKI')->join('users', 'testers.user_id', '=', 'users.user_id')->orderBy('get_bugs_count', 'desc')->orderBy('users.last_name')->paginate(10);
+        $testers = User::withCount('getBugs')->with('VKI')->join('users', 'testers.user_id', '=', 'users.user_id')->orderBy('get_bugs_count', 'desc')->orderBy('users.last_name');
+        if ($request->has('s'))
+            $testers = $testers->where('users.last_name', 'like', '%' . e($request->s) . '%')->orWhere('users.first_name', 'like', '%' . e($request->s) . '%')->paginate(10);
+        else
+            $testers = $testers->paginate(10);
         return view('testers.index', compact('testers'));
     }
 
@@ -334,7 +338,8 @@ class HomeController extends Controller
     public function bugs()
     {
         $bugs = Bug::orderBy('created_at', 'desc')->paginate(15);
-        return view('bugs.index', compact('bugs'));
+        $btype = Bug::$bugtypes['all'];
+        return view('bugs.index', compact('bugs', 'btype'));
     }
 
     public function productBugs($id)

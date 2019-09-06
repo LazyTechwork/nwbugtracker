@@ -105,6 +105,13 @@ class Bug extends Model
         return Bug::$priorities[$this->priority];
     }
 
+    public static $bugtypes = [
+        'all' => ['tab'=>'Все отчёты','back'=>'Назад в профиль','route'=>'home'],
+        'my' => ['tab'=>'Мои отчёты','back'=>'Назад в профиль','route'=>'home'],
+        'product' => ['tab'=>'Отчёты по продукту &laquo;%s&raquo;','back'=>'Назад к продукту','route'=>'products.show'],
+        'tester' => ['tab'=>'Отчёты тестировщика &laquo;%s&raquo;','back'=>'Назад к тестировщику','route'=>'testers.show'],
+    ];
+
     public function getAuthor()
     {
         return $this->belongsTo(User::class, 'author', 'user_id');
