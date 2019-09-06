@@ -43,6 +43,6 @@ class User extends Authenticatable
 
     public function isMod()
     {
-        return $this->getModeratableProducts()->count() ? true : false;
+        return $this->getModeratableProducts()->count() || DB::table('global_moderators')->where('user_id', session()->get('id'))->get()->count() > 0 ? true : false;
     }
 }

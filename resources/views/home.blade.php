@@ -11,6 +11,9 @@
                 <span>Имя: <strong>{{$user['last_name'] . ' ' . $user['first_name']}}</strong> <sup>{{$user['id']}}</sup></span><br>
                 <span>Баллы: <strong>{{ $userdb['points'] }}</strong></span><br>
                 <span>Отчёты: <strong>{{ $userdb->getBugs->count() }}</strong></span><br>
+                @if(session()->get('isglmod') && $userdb->isMod())
+                    <span>Модератор: <strong>{{ $userdb->moderatorName() }}</strong></span><br>
+                @endif
                 <span>На должности с <strong>{{ $userdb['data'] }}</strong></span><br>
                 @if($userdb['kick'])
                     <span>Исключён из программы тестирование по причине: <strong>{{ $userdb['reason'] == 'None' ? '-' : $userdb['reason'] }}</strong></span><br>
