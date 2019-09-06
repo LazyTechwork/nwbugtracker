@@ -5,9 +5,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card w-100">
-                    <div class="row no-gutters px-2">
+                    <div class="row no-gutters px-2 py-2">
                         <div class="col-md-3">
-                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded" alt=""><br>
+                            <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded mb-1" alt=""><br>
                             @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
                                 <button href="#" class="btn btn-light w-100 mb-1" data-toggle="modal"
                                         data-target="#changeStatus">Изменить статус
@@ -101,11 +101,11 @@
                                 </div>
                             @endif
                             @if(($bug->canBeReopened() || $bug->status == 0) && session()->get('id') == $author->user_id)
-                                <a href="{{ route('bugs.editbugV', ['id'=>$bug->id]) }}" class="btn btn-light w-100">Редактировать
+                                <a href="{{ route('bugs.editbugV', ['id'=>$bug->id]) }}" class="btn btn-light w-100 mb-1">Редактировать
                                     отчёт</a>
                             @endif
                             @if($prod->isModerator(session()->get('id')) || session()->get('isglmod') || ($author->user_id == session()->get('id') && ($bug->canBeReopened() || $bug->status == 0 || $bug->status == 3)))
-                                <a href="{{ route('bugs.delbug', ['id'=>$bug->id]) }}" class="btn btn-light w-100">Удалить
+                                <a href="{{ route('bugs.delbug', ['id'=>$bug->id]) }}" class="btn btn-light w-100 mb-1">Удалить
                                     отчёт</a>
                             @endif
                         </div>

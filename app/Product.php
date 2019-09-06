@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -22,7 +23,7 @@ class Product extends Model
 
     public function getLatestVersion()
     {
-        return $this->getProductVersions()->orderBy('id', 'desc')->first();
+        return $this->getProductVersions()->whereRaw('"time" <= CURRENT_TIMESTAMP')->orderBy('id', 'desc')->first();
     }
 
     public function isModerator($id)

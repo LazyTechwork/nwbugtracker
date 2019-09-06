@@ -156,7 +156,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => nl2br(e($request->description)),
+            'description' => e($request->description),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -193,7 +193,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => nl2br(e($request->description)),
+            'description' => e($request->description),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -266,7 +266,7 @@ class HomeController extends Controller
         $dataset = [
             'product' => $id,
             'version' => $request->version,
-            'changelog' => nl2br(e($request->changelog)),
+            'changelog' => e($request->changelog),
             'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
         ];
         $upd = ProductUpdate::create($dataset);
@@ -403,7 +403,7 @@ class HomeController extends Controller
             'author' => session()->get('id'),
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => nl2br(e($request->steps)),
+            'steps' => e($request->steps),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -475,7 +475,7 @@ class HomeController extends Controller
         $dataset = [
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => nl2br(e($request->steps)),
+            'steps' => e($request->steps),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -575,7 +575,7 @@ class HomeController extends Controller
             'bug_id' => $id,
             'author' => \session()->get('id'),
             'status' => $request->status,
-            'comment' => $request->comment != null ? nl2br(e($request->comment)) : null,
+            'comment' => $request->comment != null ? e($request->comment) : null,
             'time' => Carbon::now()->toDateTimeString(),
             'hidden' => !$reopening || $request->hideauthor
         ]);
