@@ -105,7 +105,8 @@
                                     отчёт</a>
                             @endif
                             @if($prod->isModerator(session()->get('id')) || session()->get('isglmod') || ($author->user_id == session()->get('id') && ($bug->canBeReopened() || $bug->status == 0 || $bug->status == 3)))
-                                <a href="{{ route('bugs.delbug') }}" class="btn btn-light w-100">Удалить отчёт</a>
+                                <a href="{{ route('bugs.delbug', ['id'=>$bug->id]) }}" class="btn btn-light w-100">Удалить
+                                    отчёт</a>
                             @endif
                         </div>
                         <div class="col-md-9">
