@@ -671,7 +671,7 @@ class HomeController extends Controller
 
     public function apanel()
     {
-        $bugs = Bug::where('reward', '>', '0')->get();
+        $bugs = Bug::where('reward', '>', '0')->whereIn('status', [2,4])->get();
         $bugsawait = $bugs->count();
         $testersawait = 0;
         $pointsawait = 0;
@@ -698,7 +698,7 @@ class HomeController extends Controller
 
     public function letPoints()
     {
-        $bugs = Bug::where('reward', '>', '0')->get();
+        $bugs = Bug::where('reward', '>', '0')->whereIn('status', [2,4])->get();
         $testers = [];
         $points = [];
         $pointsawait = 0;
