@@ -59,8 +59,14 @@
                         @if(session()->get('isglmod'))
                             <li class="nav-item"><a class="nav-link" href="{{ route('apanel') }}">Админ-панель</a></li>
                         @endif
+                        @php
+                            $CURRENT_USER = App\User::find(session()->get('id'));
+                        @endphp
+                        @if(session()->get('isglmod') || $CURRENT_USER->isMod())
+                            <li class="nav-item"><a class="nav-link" href="{{ route('mpanel.mpanel') }}">Модераторная</a></li>
+                        @endif
                         <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Выход</a></li>
-                    @endguest
+                    @endif
                 </ul>
             </div>
         </div>
@@ -103,7 +109,7 @@
                 </div>
                 <div class="col-md-2">
                     <a href="{{ route('terms') }}">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.3.12</b></div>
+                    <div class="text-muted">Версия <b>1.4.0</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>

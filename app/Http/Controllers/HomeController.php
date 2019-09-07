@@ -724,4 +724,14 @@ class HomeController extends Controller
         Session::flash('success', 'Начислено '.$pointsawait.' баллов '.count($testers).' тестировщикам!');
         return redirect()->route('apanel');
     }
+
+    public function modpanel()
+    {
+        $moderator = User::find(\session()->get('id'));
+        if(\session()->get('isglmod'))
+            $products = Product::all();
+        else
+            $products = $moderator->getModeratableProducts;
+        return view('modpanel.mpanel', compact('products', 'moderator'));
+    }
 }

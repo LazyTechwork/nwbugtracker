@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\IsGlobalMod;
+use App\Http\Middleware\IsModerator;
 use App\Http\Middleware\IsSessioned;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -64,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'sessioned' => IsSessioned::class,
         'glmod' => IsGlobalMod::class,
+        'ismod' => IsModerator::class,
     ];
 
     /**

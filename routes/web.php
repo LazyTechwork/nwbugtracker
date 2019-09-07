@@ -26,6 +26,10 @@ Route::middleware('sessioned')->group(function () {
         Route::get('apanel', 'HomeController@apanel')->name('apanel');
         Route::get('letpoints', 'HomeController@letPoints')->name('letpts');
     });
+
+    Route::middleware('ismod')->prefix('mpanel')->name('mpanel.')->group(function () {
+        Route::get('panel', 'HomeController@modpanel')->name('mpanel');
+    });
     Route::prefix('product')->name('products.')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
         Route::get('show/{id}', 'HomeController@showProduct')->name('show');
