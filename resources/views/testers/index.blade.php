@@ -13,6 +13,9 @@
                         </div>
                     </div>
                 </form>
+                <hr>
+                <p class="text-muted">Количество тестировщиков: {{ $testers->total() }}</p>
+                {{ $testers->links() }}
                 <table class="table">
                     <tbody>
                     @foreach($testers as $tester)

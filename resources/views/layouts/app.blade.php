@@ -103,7 +103,7 @@
                 </div>
                 <div class="col-md-2">
                     <a href="{{ route('terms') }}">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.3.11</b></div>
+                    <div class="text-muted">Версия <b>1.3.12</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>

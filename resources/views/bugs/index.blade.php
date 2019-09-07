@@ -4,8 +4,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>{{ $btype['tab'] }}</h1>
-                <h5><a href="{{ route($btype['route'], $btype['pars']) }}" class="btn btn-light">{{ $btype['back'] }}</a></h5>
+                <h1>{{ $btype['tab'] }} <a href="{{ route($btype['route'], $btype['pars']) }}" class="btn btn-light">{{ $btype['back'] }}</a></h1>
+
+                <p class="text-muted">Отчётов в этой категории: {{ $bugs->total() }}</p>
+
+                {{ $bugs->links() }}
                 <table class="table">
                     <tbody>
                     @foreach($bugs as $bug)
