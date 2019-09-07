@@ -344,14 +344,38 @@ class HomeController extends Controller
 
     public function productBugs($id)
     {
+        $prod = Product::find($id);
+        if ($prod == null) {
+            Session::flash('error', 'Продукт не найден');
+            return redirect()->route('products.index');
+        }
         $bugs = Bug::where('product', $id)->orderBy('created_at', 'desc')->paginate(15);
-        return view('bugs.index', compact('bugs'));
+        $btype = Bug::$bugtypes['product'];
+        $btype['pars'] = ['id' => $id];
+        $btype['tab'] = sprintf($btype['tab'], $prod->name);
+        return view('bugs.index', compact('bugs', 'btype'));
     }
 
     public function myBugs()
     {
         $bugs = Bug::where('author', \session()->get('id'))->orderBy('created_at', 'desc')->paginate(15);
-        return view('bugs.index', compact('bugs'));
+        $btype = Bug::$bugtypes['my'];
+        return view('bugs.index', compact('bugs', 'btype'));
+    }
+
+    public function testerBugs($id)
+    {
+        $usr = User::find($id);
+        if ($usr == null) {
+            Session::flash('error', 'Тестировщик не найден');
+            return redirect()->route('testers.index');
+        }
+        $usrinfo = $usr->getVkInfo();
+        $bugs = Bug::where('author', $id)->orderBy('created_at', 'desc')->paginate(15);
+        $btype = Bug::$bugtypes['tester'];
+        $btype['pars'] = ['id' => $id];
+        $btype['tab'] = sprintf($btype['tab'], $usrinfo->last_name . ' ' . $usrinfo->first_name);
+        return view('bugs.index', compact('bugs', 'btype'));
     }
 
     public function newBugV($productid)

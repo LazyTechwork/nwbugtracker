@@ -106,10 +106,10 @@ class Bug extends Model
     }
 
     public static $bugtypes = [
-        'all' => ['tab'=>'Все отчёты','back'=>'Назад в профиль','route'=>'home'],
-        'my' => ['tab'=>'Мои отчёты','back'=>'Назад в профиль','route'=>'home'],
-        'product' => ['tab'=>'Отчёты по продукту &laquo;%s&raquo;','back'=>'Назад к продукту','route'=>'products.show'],
-        'tester' => ['tab'=>'Отчёты тестировщика &laquo;%s&raquo;','back'=>'Назад к тестировщику','route'=>'testers.show'],
+        'all' => ['tab' => 'Все отчёты', 'back' => 'Назад в профиль', 'route' => 'home', 'pars' => []],
+        'my' => ['tab' => 'Мои отчёты', 'back' => 'Назад в профиль', 'route' => 'home', 'pars' => []],
+        'product' => ['tab' => 'Отчёты по продукту %s', 'back' => 'Назад к продукту', 'route' => 'products.show', 'pars' => []],
+        'tester' => ['tab' => 'Отчёты тестировщика %s', 'back' => 'Назад к тестировщику', 'route' => 'testers.show', 'pars' => []],
     ];
 
     public function getAuthor()
@@ -130,12 +130,13 @@ class Bug extends Model
     public function getProductVersion()
     {
         $ver = ProductUpdate::find($this->version);
-        if($ver == null) return null;
+        if ($ver == null) return null;
         return $ver->version;
     }
 
-    public function canBeReopened() {
-        return in_array($this->status, [8,9]);
+    public function canBeReopened()
+    {
+        return in_array($this->status, [8, 9]);
     }
 
     public function isActualVersion()
@@ -143,7 +144,8 @@ class Bug extends Model
         return !$this->canBeReopened() || $this->version >= $this->getProduct->getProductVersions()->orderBy('id', 'DESC')->first()->id;
     }
 
-    public function getNLsteps() {
+    public function getNLsteps()
+    {
         return preg_replace('/<br(\s+)?\/?>/i', "\n", $this->steps);
     }
 }
