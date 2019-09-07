@@ -330,7 +330,8 @@ class HomeController extends Controller
         if ($tester == null) return redirect()->route('testers.index');
         $vkinfo = $tester->getVkInfo();
         $userdb = User::find(session()->get('id'));
-        return view('testers.show', compact('tester', 'vkinfo', 'userdb'));
+        $bugs = Bug::where('author', $tester->user_id)->orderBy('created_at', 'desc')->take(3)->get();
+        return view('testers.show', compact('tester', 'vkinfo', 'userdb', 'bugs'));
     }
 
 //    REPORTS

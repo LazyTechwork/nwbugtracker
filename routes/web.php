@@ -46,6 +46,7 @@ Route::middleware('sessioned')->group(function () {
     Route::prefix('tester')->name('testers.')->group(function () {
         Route::get('list', 'HomeController@testers')->name('index');
         Route::get('show/{id}', 'HomeController@showTester')->name('show');
+        Route::get('bugs/{id}', 'HomeController@testerBugs')->name('bugs');
     });
 
     Route::prefix('bug')->name('bugs.')->group(function () {
