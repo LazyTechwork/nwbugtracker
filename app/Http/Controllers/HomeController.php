@@ -732,6 +732,10 @@ class HomeController extends Controller
             $products = Product::all();
         else
             $products = $moderator->getModeratableProducts;
-        return view('modpanel.mpanel', compact('products', 'moderator'));
+        $prodids = array_column($products->map->only('id')->toArray(), 'id');
+        $open = Bug::whereIn('product', $prodids)->whereIn('status', [0,4])->get();
+        $inqueue = Bug::whereIn('product', $prodids)->where('status', 5)->get();
+        $wip = Bug::whereIn('product', $prodids)->where('status', 1)->get();
+        return view('modpanel.mpanel', compact('products', 'moderator', 'open', 'inqueue', 'wip'));
     }
 }
