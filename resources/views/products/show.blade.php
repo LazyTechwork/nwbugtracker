@@ -37,7 +37,7 @@
                                             class="btn btn-danger">Модераторы</a>
                                         <a href="{{ route('products.editprodV', ['id'=>$prod->id]) }}" class="btn btn-warning">Редактировать продукт</a>
                                         @endif
-                                    @if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod')) <a
+                                    @if($prod->isModerator(session()->get('id')) || session()->get('isglmod')) <a
                                             href="{{ route('products.newupdV', ['id'=>$prod->id]) }}"
                                             class="btn btn-outline-primary">Новое
                                         обновление</a>
@@ -45,12 +45,12 @@
                                 </div>
                                 <h5 class="card-title">Обновления</h5>
                                 @forelse($updates as $vers)
-                                    @if($vers->time->lte(\Carbon\Carbon::now()) || $prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                    @if($vers->time->lte(\Carbon\Carbon::now()) || $prod->isModerator(session()->get('id')) || session()->get('isglmod'))
                                         <h6 class="font-weight-bold">{{ $vers->version }} <sup
                                                     class="text-muted">{{ $vers->time->format('d.m.Y H:i') }}</sup>
                                         </h6>
                                         <p>{!! $vers->changelog !!}</p>
-                                        @if(($vers->time->gte(\Carbon\Carbon::now()->addHour()) && $prod->isModerator(session()->get('user_id'))) || session()->get('isglmod'))
+                                        @if(($vers->time->gte(\Carbon\Carbon::now()->addHour()) && $prod->isModerator(session()->get('id'))) || session()->get('isglmod'))
                                             <a href="{{ route('products.delupd', ['id'=>$prod->id, 'updateid'=>$vers->id]) }}"
                                                class="btn btn-outline-danger">Удалить</a>
                                         @endif

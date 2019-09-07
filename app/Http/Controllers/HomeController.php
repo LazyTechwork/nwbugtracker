@@ -230,7 +230,7 @@ class HomeController extends Controller
             Session::flash('error', 'Продукт не найден!');
             return redirect()->route('home');
         }
-        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+        if (!$prod->isModerator(session()->get('id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
             return redirect()->route('products.show', ['id' => $id]);
         }
@@ -244,7 +244,7 @@ class HomeController extends Controller
             Session::flash('error', 'Продукт не найден!');
             return redirect()->route('home');
         }
-        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+        if (!$prod->isModerator(session()->get('id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
             return redirect()->route('products.show', ['id' => $id]);
         }
@@ -283,7 +283,7 @@ class HomeController extends Controller
             Session::flash('error', 'Продукт не найден!');
             return redirect()->route('home');
         }
-        if (!$prod->isModerator(session()->get('user_id')) && !session()->get('isglmod')) {
+        if (!$prod->isModerator(session()->get('id')) && !session()->get('isglmod')) {
             Session::flash('error', 'Доступ в эту зону запрещён для Вас!');
             return redirect()->route('products.show', ['id' => $id]);
         }

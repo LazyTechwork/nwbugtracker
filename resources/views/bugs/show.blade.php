@@ -8,7 +8,7 @@
                     <div class="row no-gutters px-2 py-2">
                         <div class="col-md-3">
                             <img src="{{ $prod->getImage() }}" class="card-img-top img-fluid rounded mb-1" alt=""><br>
-                            @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                            @if ($prod->isModerator(session()->get('id')) || session()->get('isglmod'))
                                 <button href="#" class="btn btn-light w-100 mb-1" data-toggle="modal"
                                         data-target="#changeStatus">Изменить статус
                                 </button>
@@ -150,7 +150,7 @@
                                 </p>
                                 <p class="mb-0">Тип проблемы <strong>{{ $bug->getType() }}</strong></p>
                                 <p class="mb-0">Приоритет <strong>{{ $bug->getPriority() }}</strong></p>
-                                @if ($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                @if ($prod->isModerator(session()->get('id')) || session()->get('isglmod'))
                                     <p class="mb-0">Вознаграждение <strong>{{ $bug->reward }}</strong></p>
                                 @endif
                                 <p class="mb-0">Создан
@@ -164,7 +164,7 @@
                                     <p>
                                         <strong>
                                             @if($upd->hidden){{ $upda->moderatorName() }}
-                                            @if($prod->isModerator(session()->get('user_id')) || session()->get('isglmod'))
+                                            @if($prod->isModerator(session()->get('id')) || session()->get('isglmod'))
                                                 <span>(<a
                                                         href="{{ route('testers.show', ['id'=>$upda->user_id]) }}">{{ $updavk->last_name . ' ' . $updavk->first_name }}</a>)</span>
                                             @endif
