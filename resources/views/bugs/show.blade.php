@@ -32,7 +32,7 @@
                                                         <select class="form-control" name="status" id="newStatus"
                                                                 required>
                                                             @foreach(\App\Bug::$statuses as $status)
-                                                                @if($bug->status != $loop->index)
+                                                                @if($bug->status != $loop->index && $loop->index != 3)
                                                                     <option
                                                                         value="{{ $loop->index }}">{{ $status }}</option>
                                                                 @endif
