@@ -156,7 +156,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => e($request->description),
+            'description' => str_replace(["\n","\r"], "", nl2br(e($request->description))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -193,7 +193,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => e($request->description),
+            'description' => str_replace(["\n","\r"], "", nl2br(e($request->description))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -432,7 +432,7 @@ class HomeController extends Controller
             'author' => session()->get('id'),
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => e($request->steps),
+            'steps' => str_replace(["\n","\r"], "", nl2br(e($request->steps))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -504,7 +504,7 @@ class HomeController extends Controller
         $dataset = [
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => e($request->steps),
+            'steps' => str_replace(["\n","\r"], "", nl2br(e($request->steps))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
