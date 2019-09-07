@@ -56,6 +56,9 @@
                     @else
                         <li class="nav-item"><a class="nav-link" href="{{ route('bugs.my') }}">Мои отчёты</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('shop.index') }}">Магазин</a></li>
+                        @if(session()->get('isglmod'))
+                            <li class="nav-item"><a class="nav-link" href="{{ route('apanel') }}">Админ-панель</a></li>
+                        @endif
                         <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Выход</a></li>
                     @endguest
                 </ul>
@@ -93,7 +96,7 @@
                 </div>
                 <div class="col-md-2">
                     <a href="{{ route('terms') }}">Правила пользования</a>
-                    <div class="text-muted">Версия <b>1.3.10</b></div>
+                    <div class="text-muted">Версия <b>1.3.11</b></div>
                 </div>
                 <div class="col-md-2 d-none d-lg-block">
                     <a href="//vk.com/tekly"><img src="{{ asset('img/tekly.svg') }}" alt="" height="60"></a>

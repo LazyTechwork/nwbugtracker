@@ -662,4 +662,30 @@ class HomeController extends Controller
     {
         return view('shop.index');
     }
+
+    public function settings()
+    {
+
+    }
+
+    public function apanel()
+    {
+        $bugs = Bug::where('reward', '>', '0')->get();
+        $bugsawait = $bugs->count();
+        $testersawait = 0;
+        $pointsawait = 0;
+        $testers = [];
+        foreach ($bugs as $bug) {
+            $pointsawait+=$bug->reward;
+            array_push($testers, $bug->author);
+        }
+        array_unique($testers);
+        $testersawait = count($testers);
+        return view('apanel', compact('bugsawait', 'testersawait', 'pointsawait'));
+    }
+
+    public function letPoints()
+    {
+
+    }
 }

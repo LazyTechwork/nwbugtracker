@@ -20,8 +20,10 @@ Route::get('terms', 'HomeController@terms')->name('terms');
 
 Route::middleware('sessioned')->group(function () {
     Route::get('home', 'HomeController@index')->name('home');
+    Route::get('settings', 'HomeController@settings')->name('settings');
     Route::middleware('glmod')->group(function () {
         Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+        Route::get('apanel', 'HomeController@apanel')->name('apanel');
     });
     Route::prefix('product')->name('products.')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
