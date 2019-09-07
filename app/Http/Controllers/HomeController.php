@@ -676,18 +676,24 @@ class HomeController extends Controller
         $testersawait = 0;
         $pointsawait = 0;
         $testers = [];
+        $tstrbugs = [];
         $points = [];
         foreach ($bugs as $bug) {
             $pointsawait += $bug->reward;
             array_push($testers, $bug->author);
-            /*if(array_key_exists($bug->author, $points))
-                array_push($points[$bug->author], [$bug->id, $bug->name, $bug->reward]);
+            if (array_key_exists($bug->author, $points))
+                $points[$bug->author] += $bug->reward;
             else
-                $points[$bug->author] = [[$bug->id, $bug->name, $bug->reward]];*/
+                $points[$bug->author] = $bug->reward;
+            if (array_key_exists($bug->author, $tstrbugs))
+                array_push($tstrbugs[$bug->author], $bug);
+            else
+                $tstrbugs[$bug->author] = [$bug];
         }
         $testers = array_unique($testers);
+        $tstrs = User::find($testers);
         $testersawait = count($testers);
-        return view('apanel', compact('bugsawait', 'testersawait', 'pointsawait'));
+        return view('apanel', compact('bugsawait', 'testersawait', 'pointsawait', 'tstrs', 'points', 'tstrbugs'));
     }
 
     public function letPoints()
@@ -721,19 +727,19 @@ class HomeController extends Controller
             } catch (VkException $e) {
             }
         }
-        Session::flash('success', 'Начислено '.$pointsawait.' баллов '.count($testers).' тестировщикам!');
+        Session::flash('success', 'Начислено ' . $pointsawait . ' баллов ' . count($testers) . ' тестировщикам!');
         return redirect()->route('apanel');
     }
 
     public function modpanel()
     {
         $moderator = User::find(\session()->get('id'));
-        if(\session()->get('isglmod'))
+        if (\session()->get('isglmod'))
             $products = Product::all();
         else
             $products = $moderator->getModeratableProducts;
         $prodids = array_column($products->map->only('id')->toArray(), 'id');
-        $open = Bug::whereIn('product', $prodids)->whereIn('status', [0,4])->get();
+        $open = Bug::whereIn('product', $prodids)->whereIn('status', [0, 4])->get();
         $inqueue = Bug::whereIn('product', $prodids)->where('status', 5)->get();
         $wip = Bug::whereIn('product', $prodids)->where('status', 1)->get();
         return view('modpanel.mpanel', compact('products', 'moderator', 'open', 'inqueue', 'wip'));
