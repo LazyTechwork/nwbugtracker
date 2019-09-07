@@ -266,7 +266,7 @@ class HomeController extends Controller
         $dataset = [
             'product' => $id,
             'version' => $request->version,
-            'changelog' => e($request->changelog),
+            'changelog' => str_replace(["\n","\r"], "", nl2br(e($request->changelog))),
             'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
         ];
         $upd = ProductUpdate::create($dataset);
