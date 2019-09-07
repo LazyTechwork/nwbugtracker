@@ -81,9 +81,13 @@
                             <p class="mb-0">{{ session()->get('success') }}</p>
                         </div>
                     @endif
+                    @if(session()->has('vktoken'))
                         <div class="alert alert-info" role="alert">
-                            Если Вы хотите получать уведомления о начислении баллов, <a href="//vk.me/nwbugs" class="alert-link">разрешите сообщения от бота Баг-трекера</a>
+                            Если Вы хотите получать уведомления о начислении баллов, <a href="//vk.me/nwbugs"
+                                                                                        class="alert-link">разрешите
+                                сообщения от бота Баг-трекера</a>
                         </div>
+                    @endif
                 </div>
             </div>
         </div>

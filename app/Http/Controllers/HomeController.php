@@ -157,7 +157,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => str_replace(["\n", "\r"], "", nl2br(e($request->description))),
+            'description' => str_replace(["\n", "\r"], "", urlify(nl2br(e($request->description)))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -194,7 +194,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => str_replace(["\n", "\r"], "", nl2br(e($request->description))),
+            'description' => str_replace(["\n", "\r"], "", urlify(nl2br(e($request->description)))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -267,7 +267,7 @@ class HomeController extends Controller
         $dataset = [
             'product' => $id,
             'version' => $request->version,
-            'changelog' => str_replace(["\n", "\r"], "", nl2br(e($request->changelog))),
+            'changelog' => str_replace(["\n", "\r"], "", urlify(nl2br(e($request->changelog)))),
             'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
         ];
         $upd = ProductUpdate::create($dataset);
@@ -434,7 +434,7 @@ class HomeController extends Controller
             'author' => session()->get('id'),
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => str_replace(["\n", "\r"], "", nl2br(e($request->steps))),
+            'steps' => str_replace(["\n", "\r"], "", urlify(nl2br(e($request->steps)))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -506,7 +506,7 @@ class HomeController extends Controller
         $dataset = [
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => str_replace(["\n", "\r"], "", nl2br(e($request->steps))),
+            'steps' => str_replace(["\n", "\r"], "", urlify(nl2br(e($request->steps)))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
