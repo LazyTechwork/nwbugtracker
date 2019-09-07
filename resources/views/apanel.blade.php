@@ -9,6 +9,7 @@
                 <p>Начисления ждут: <strong>{{ $testersawait }}</strong> тестировщиков в
                     <strong>{{ $bugsawait }}</strong> отчётах с общим количеством баллов
                     <strong>{{ $pointsawait }}</strong></p>
+                <a href="{{ route('letpts') }}" class="btn btn-danger">Начислить баллы</a>
             </div>
         </div>
     </div>

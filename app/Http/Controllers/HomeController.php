@@ -8,6 +8,7 @@ use App\Product;
 use App\ProductUpdate;
 use App\User;
 use ATehnix\VkClient\Client;
+use ATehnix\VkClient\Exceptions\VkException;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -156,7 +157,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => str_replace(["\n","\r"], "", nl2br(e($request->description))),
+            'description' => str_replace(["\n", "\r"], "", nl2br(e($request->description))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -193,7 +194,7 @@ class HomeController extends Controller
         }
         $dataset = [
             'name' => $request->name,
-            'description' => str_replace(["\n","\r"], "", nl2br(e($request->description))),
+            'description' => str_replace(["\n", "\r"], "", nl2br(e($request->description))),
             'image' => $request->image ?? 'wb.svg',
             'locked' => $request->has('locked'),
         ];
@@ -266,7 +267,7 @@ class HomeController extends Controller
         $dataset = [
             'product' => $id,
             'version' => $request->version,
-            'changelog' => str_replace(["\n","\r"], "", nl2br(e($request->changelog))),
+            'changelog' => str_replace(["\n", "\r"], "", nl2br(e($request->changelog))),
             'time' => Carbon::createFromFormat('Y-m-d\TH:i', $request->time)->getTimestamp()
         ];
         $upd = ProductUpdate::create($dataset);
@@ -433,7 +434,7 @@ class HomeController extends Controller
             'author' => session()->get('id'),
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => str_replace(["\n","\r"], "", nl2br(e($request->steps))),
+            'steps' => str_replace(["\n", "\r"], "", nl2br(e($request->steps))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -505,7 +506,7 @@ class HomeController extends Controller
         $dataset = [
             'name' => $request->name,
             'version' => $prod->getLatestVersion()->id,
-            'steps' => str_replace(["\n","\r"], "", nl2br(e($request->steps))),
+            'steps' => str_replace(["\n", "\r"], "", nl2br(e($request->steps))),
             'actually' => $request->actually,
             'expectedly' => $request->expectedly,
             'type' => $request->type,
@@ -675,17 +676,52 @@ class HomeController extends Controller
         $testersawait = 0;
         $pointsawait = 0;
         $testers = [];
+        $points = [];
         foreach ($bugs as $bug) {
-            $pointsawait+=$bug->reward;
+            $pointsawait += $bug->reward;
             array_push($testers, $bug->author);
+            /*if(array_key_exists($bug->author, $points))
+                array_push($points[$bug->author], [$bug->id, $bug->name, $bug->reward]);
+            else
+                $points[$bug->author] = [[$bug->id, $bug->name, $bug->reward]];*/
         }
-        array_unique($testers);
+        $testers = array_unique($testers);
         $testersawait = count($testers);
         return view('apanel', compact('bugsawait', 'testersawait', 'pointsawait'));
     }
 
     public function letPoints()
     {
-
+        $bugs = Bug::where('reward', '>', '0')->get();
+        $testers = [];
+        $points = [];
+        $pointsawait = 0;
+        foreach ($bugs as $bug) {
+            $pointsawait += $bug->reward;
+            if (!array_key_exists($bug->author, $testers))
+                $testers[$bug->author] = $bug->getAuthor;
+            if (array_key_exists($bug->author, $points))
+                $points[$bug->author] += $bug->reward;
+            else
+                $points[$bug->author] = $bug->reward;
+            $bug->reward = 0;
+            $bug->save();
+        }
+        $api = new Client('5.101');
+        $api->setDefaultToken('aabb1c8e9ab0e61d5c93f02c11b85b257342c79f522c10b0f148bea0501e6bebdc036a02f7d3f01b33e5b');
+        foreach ($testers as $tester) {
+            $tester->points += $points[$tester->user_id];
+            $tester->save();
+            try {
+                $api->request('messages.send', [
+                    'user_id' => $tester->user_id,
+                    'message' => sprintf('Сообщество @nwbugs (NeoWave Bug-tracker) начислило Вам %d баллов. Сейчас у Вас: %d баллов', $points[$tester->user_id], $tester->points),
+                    'random_id' => random_int(PHP_INT_MIN, PHP_INT_MAX)
+                ]);
+            } catch (VkException $e) {
+            }
+        }
+        Session::flash('success', 'Начислено '.$pointsawait.' баллов '.count($testers).' тестировщикам!');
+        return redirect()->route('apanel');
     }
 }

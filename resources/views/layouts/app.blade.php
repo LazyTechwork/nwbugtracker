@@ -68,7 +68,7 @@
     <main class="py-5 flex-shrink-0 bg-white">
         <div class="container mt-4">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     @if(session()->has('error'))
                         <div class="alert alert-danger" role="alert">
                             <h4 class="alert-heading">Ошибка!</h4>
@@ -81,6 +81,9 @@
                             <p class="mb-0">{{ session()->get('success') }}</p>
                         </div>
                     @endif
+                        <div class="alert alert-info" role="alert">
+                            Если Вы хотите получать уведомления о начислении баллов, <a href="//vk.me/nwbugs" class="alert-link">разрешите сообщения от бота Баг-трекера</a>
+                        </div>
                 </div>
             </div>
         </div>

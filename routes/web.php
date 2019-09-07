@@ -24,6 +24,7 @@ Route::middleware('sessioned')->group(function () {
     Route::middleware('glmod')->group(function () {
         Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
         Route::get('apanel', 'HomeController@apanel')->name('apanel');
+        Route::get('letpoints', 'HomeController@letPoints')->name('letpts');
     });
     Route::prefix('product')->name('products.')->group(function () {
         Route::get('list', 'HomeController@products')->name('index');
