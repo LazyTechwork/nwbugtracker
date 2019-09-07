@@ -10,4 +10,9 @@ class ProductUpdate extends Model
     public $timestamps = false;
     protected $table = 'product_updates';
     protected $dates = ['time'];
+
+    public function getProduct()
+    {
+        return $this->belongsTo(Product::class, 'product', 'id');
+    }
 }
